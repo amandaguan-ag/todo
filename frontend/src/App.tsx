@@ -5,29 +5,35 @@ import { ChakraProvider, Button, Box } from "@chakra-ui/react";
 import axios, { AxiosResponse, AxiosError } from "axios";
 
 function App() {
-  const [name, setName] = useState("test name 3");
+  const [firstName, setFirstName] = useState("Callie");
+  const [lastName, setLastName] = useState("Stoscup");
 
-  const onChange = (event: any) => {
-    // console.log("EVENT:", event.target.value);
-    setName(event.target.value);
+  const onChangeFirstName = (event: any) => {
+    setFirstName(event.target.value);
   };
-
+  const onChangeLastName = (event: any) => {
+    setLastName(event.target.value);
+  };
   const onClick = async () => {
-    try {
-      const response = await axios.post("http://localhost:3005/name", {
-        name,
-      });
-      console.log("RESPONSE: ", response.data);
-    } catch (error) {
-      console.error("ERROR", error);
-    }
+    const response = await axios.post("http://localhost:3005/name", {
+      firstName,
+      lastName,
+    });
+    console.log("RESPONSE: ", response.data);
   };
   return (
     <ChakraProvider>
       <Box m={10} display="flex" gap={4}>
-        <input onChange={onChange} placeholder="Type in a name..." />
+        <input
+          onChange={onChangeFirstName}
+          placeholder="Type in a first name..."
+        />
+        <input
+          onChange={onChangeLastName}
+          placeholder="Type in a last name..."
+        />
         <Button onClick={onClick} colorScheme="purple">
-          Test Connections!
+          Add
         </Button>
       </Box>
     </ChakraProvider>

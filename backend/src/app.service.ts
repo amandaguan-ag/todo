@@ -10,10 +10,14 @@ export class AppService {
     private namesRepository: Repository<Name>,
   ) {}
 
-  async addName(name: string) {
-    const nameData = await this.namesRepository.save({ name });
-    return await this, this.getNames();
+  async addName(firstName: string, lastName: string) {
+    await this.namesRepository.save({
+      first_name: firstName,
+      last_name: lastName,
+    });
+    return await this.getNames();
   }
+
   async getNames() {
     return await this.namesRepository.find();
   }
