@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TodosModule } from './todos/todos.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Task } from './task.entity';
 import typeorm from './config/typeorm';
@@ -19,7 +18,6 @@ import typeorm from './config/typeorm';
         configService.get('typeorm'),
     }),
     TypeOrmModule.forFeature([Task]),
-    TodosModule,
   ],
   controllers: [AppController],
   providers: [AppService],
