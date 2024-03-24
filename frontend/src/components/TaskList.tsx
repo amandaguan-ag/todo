@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Box, List } from "@chakra-ui/react";
 import axios from "axios";
 import TaskItem from "./TaskItem";
@@ -9,27 +9,18 @@ interface Task {
   completed: boolean;
 }
 
-const TaskList: React.FC = () => {
-  const [tasks, setTasks] = useState<Task[]>([]);
+interface TaskListProps {
+  tasks: Task[];
+  onTasksUpdated: () => void;
+}
 
-  useEffect(() => {
-    const fetchTasks = async () => {
-      const response = await axios.get("http://localhost:3005/tasks");
-      setTasks(response.data);
-    };
-    fetchTasks();
-  }, []);
-
-  const refreshTasks = async () => {
-    const response = await axios.get("http://localhost:3005/tasks");
-    setTasks(response.data);
-  };
+const TaskList: React.FC<TaskListProps> = ({ tasks, onTasksUpdated }) => {
 
   return (
     <Box m={10}>
       <List spacing={3} mt="4">
         {tasks.map((task) => (
-          <TaskItem key={task.id} task={task} onToggle={refreshTasks} />
+          <TaskItem key={task.id} task={task} onToggle={onTasksUpdated} />
         ))}
       </List>
     </Box>

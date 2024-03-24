@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import { Button, Input, useToast } from "@chakra-ui/react";
 import axios from "axios";
 
-const AddTask: React.FC = () => {
+interface AddTaskProps {
+  onTasksUpdated: () => void;
+}
+
+const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const toast = useToast();
 
@@ -40,6 +44,7 @@ const AddTask: React.FC = () => {
         isClosable: true,
       });
     }
+    onTasksUpdated();
   };
 
   return (
