@@ -44,7 +44,9 @@ const AddTask: React.FC = () => {
 
   return (
     <form onSubmit={addTask}>
+      <label htmlFor="new-task-title">New Task Title</label>
       <Input
+        id="new-task-title"
         value={newTaskTitle}
         onChange={(e) => setNewTaskTitle(e.target.value)}
         placeholder="Enter a new task..."
