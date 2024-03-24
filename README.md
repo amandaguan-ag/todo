@@ -95,10 +95,6 @@ To use the Todo List Application, follow these steps:
 2. Add a todo by clicking the "Add Todo" button.
 3. Your todo item should now be saved to the PostgreSQL database.
 
-## Contributing
-
-Contributions to the Todo List Application are welcome. Please fork the repository and create a pull request with your features or fixes.
-
 ## License
 
 This project is licensed under the MIT License.
