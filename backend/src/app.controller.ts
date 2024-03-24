@@ -5,17 +5,19 @@ import { AppService } from './app.service';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Post('/name')
-  async addName(
-    @Body('firstName') firstName: string,
-    @Body('lastName') lastName: string,
-  ) {
-    console.log(firstName, lastName);
-    return await this.appService.addName(firstName, lastName);
+  @Post('/task')
+  async addTask(@Body('title') title: string) {
+    console.log('Adding Task:', title);
+    const result = await this.appService.addTask(title);
+    console.log('Task Added:', result);
+    return result;
+    //   return await this.appService.addTask(title);
   }
 
-  @Get()
-  getNames() {
-    return this.appService.getNames();
+  @Get('/tasks')
+  getTasks() {
+    return this.appService.getTasks();
   }
+
+  // Define endpoints for updating and deleting tasks
 }

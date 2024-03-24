@@ -1,40 +1,58 @@
-import React, { useState } from "react";
-import logo from "./logo.svg";
-import "./App.css";
-import { ChakraProvider, Button, Box } from "@chakra-ui/react";
-import axios, { AxiosResponse, AxiosError } from "axios";
+import React, { useState, useEffect } from "react";
+import {
+  ChakraProvider,
+  Button,
+  Box,
+  Input,
+  List,
+  ListItem,
+} from "@chakra-ui/react";
+import axios from "axios";
+
+interface Task {
+  id: number;
+  title: string;
+  completed: boolean;
+}
 
 function App() {
-  const [firstName, setFirstName] = useState("Callie");
-  const [lastName, setLastName] = useState("Stoscup");
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [newTaskTitle, setNewTaskTitle] = useState("");
 
-  const onChangeFirstName = (event: any) => {
-    setFirstName(event.target.value);
-  };
-  const onChangeLastName = (event: any) => {
-    setLastName(event.target.value);
-  };
-  const onClick = async () => {
-    const response = await axios.post("http://localhost:3005/name", {
-      firstName,
-      lastName,
+  useEffect(() => {
+    const fetchTasks = async () => {
+      const response = await axios.get("http://localhost:3005/tasks");
+      setTasks(response.data);
+    };
+    fetchTasks();
+  }, []);
+
+  const addTask = async () => {
+    console.log("Adding Task:", newTaskTitle);
+    const response = await axios.post("http://localhost:3005/task", {
+      title: newTaskTitle,
     });
-    console.log("RESPONSE: ", response.data);
+    //   await axios.post("http://localhost:3005/task", { title: newTaskTitle });
+    console.log("Add Task Response:", response.data);
+    // Clear input after adding and possibly fetch updated list
   };
+
   return (
     <ChakraProvider>
-      <Box m={10} display="flex" gap={4}>
-        <input
-          onChange={onChangeFirstName}
-          placeholder="Type in a first name..."
+      <Box m={10}>
+        <Input
+          value={newTaskTitle}
+          onChange={(e) => setNewTaskTitle(e.target.value)}
+          placeholder="Enter a new task..."
         />
-        <input
-          onChange={onChangeLastName}
-          placeholder="Type in a last name..."
-        />
-        <Button onClick={onClick} colorScheme="purple">
-          Add
+        <Button onClick={addTask} colorScheme="blue" mt="4">
+          Add Task
         </Button>
+        <List spacing={3} mt="4">
+          {tasks.map((task) => (
+            <ListItem key={task.id}>{task.title}</ListItem>
+          ))}
+        </List>
       </Box>
     </ChakraProvider>
   );
