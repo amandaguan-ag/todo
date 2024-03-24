@@ -1,7 +1,6 @@
 import React from "react";
-import { Checkbox, ListItem } from "@chakra-ui/react";
+import { Checkbox, ListItem, Button } from "@chakra-ui/react";
 import axios from "axios";
-
 interface TaskProps {
   task: {
     id: number;
@@ -21,10 +20,23 @@ const TaskItem: React.FC<TaskProps> = ({ task, onToggle }) => {
     }
   };
 
+  const deleteTask = async () => {
+    try {
+      await axios.delete(`http://localhost:3005/task/${task.id}`);
+      onToggle(); 
+    } catch (error) {
+      console.error("Failed to delete task:", error);
+    }
+  };
+
   return (
-    <ListItem textDecoration={task.completed ? "line-through" : "none"}>
-      {task.title}
-      <Checkbox isChecked={task.completed} onChange={toggleCompletion} ml="4" />
+    <ListItem display="flex" justifyContent="space-between" alignItems="center">
+      <Checkbox isChecked={task.completed} onChange={toggleCompletion}>
+        {task.title}
+      </Checkbox>
+      <Button colorScheme="red" size="sm" onClick={deleteTask}>
+        Delete
+      </Button>
     </ListItem>
   );
 };

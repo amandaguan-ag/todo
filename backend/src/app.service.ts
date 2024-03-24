@@ -31,5 +31,10 @@ export class AppService {
     return task;
   }
 
-  // Include methods for deleting tasks here
+  async deleteTask(id: number): Promise<void> {
+    const result = await this.taskRepository.delete(id);
+    if (result.affected === 0) {
+      throw new Error(`Task with ID ${id} not found.`);
+    }
+  }
 }
