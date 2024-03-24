@@ -20,11 +20,16 @@ const TaskList: React.FC = () => {
     fetchTasks();
   }, []);
 
+  const refreshTasks = async () => {
+    const response = await axios.get("http://localhost:3005/tasks");
+    setTasks(response.data);
+  };
+
   return (
     <Box m={10}>
       <List spacing={3} mt="4">
         {tasks.map((task) => (
-          <TaskItem key={task.id} task={task} />
+          <TaskItem key={task.id} task={task} onToggle={refreshTasks} />
         ))}
       </List>
     </Box>

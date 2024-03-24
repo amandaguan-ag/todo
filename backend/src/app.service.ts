@@ -21,5 +21,15 @@ export class AppService {
     return await this.taskRepository.find();
   }
 
-  // Include methods for updating and deleting tasks here
+  async toggleTaskCompletion(id: number): Promise<Task> {
+    const task = await this.taskRepository.findOne({ where: { id } });
+    if (!task) {
+      throw new Error(`Task with ID ${id} not found.`);
+    }
+    task.completed = !task.completed;
+    await this.taskRepository.save(task);
+    return task;
+  }
+
+  // Include methods for deleting tasks here
 }

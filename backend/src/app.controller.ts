@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Patch, Param } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
@@ -19,5 +19,9 @@ export class AppController {
     return this.appService.getTasks();
   }
 
-  // Define endpoints for updating and deleting tasks
+  @Patch('/task/:id/completion')
+  async toggleTaskCompletion(@Param('id') id: string) {
+    return await this.appService.toggleTaskCompletion(+id);
+  }
+  // Define endpoints for deleting tasks
 }
