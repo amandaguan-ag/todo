@@ -15,11 +15,7 @@ export class AppController {
 
   @Post('/task')
   async addTask(@Body('title') title: string) {
-    console.log('Adding Task:', title);
-    const result = await this.appService.addTask(title);
-    console.log('Task Added:', result);
-    return result;
-    //   return await this.appService.addTask(title);
+      return await this.appService.addTask(title);
   }
 
   @Get('/tasks')
