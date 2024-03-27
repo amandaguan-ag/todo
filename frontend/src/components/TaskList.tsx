@@ -1,5 +1,4 @@
 import { Box, List } from "@chakra-ui/react";
-import axios from "axios";
 import TaskItem from "./TaskItem";
 import { Task } from "../types/Task"; 
 
