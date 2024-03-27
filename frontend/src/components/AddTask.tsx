@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Input, useToast } from "@chakra-ui/react";
+import { Button, Input, useToast, Select } from "@chakra-ui/react";
 import axios from "axios";
 
 interface AddTaskProps {
@@ -8,6 +8,8 @@ interface AddTaskProps {
 
 const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
   const [newTaskTitle, setNewTaskTitle] = useState("");
+  const [priority, setPriority] = useState(""); 
+  const [isPriorityInvalid, setIsPriorityInvalid] = useState(false); 
   const toast = useToast();
 
   const addTask = async (e: React.FormEvent) => {
@@ -23,11 +25,26 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
       return;
     }
 
+    if (!priority) {
+      setIsPriorityInvalid(true); 
+      toast({
+        title: "Priority selection is required.",
+        description: "Please select a priority for the task.",
+        status: "warning",
+        duration: 2000,
+        isClosable: true,
+      });
+      return;
+    }
+
     try {
       await axios.post("http://localhost:3005/task", {
         title: newTaskTitle.trim(),
+        priority,
       });
       setNewTaskTitle("");
+      setPriority(""); 
+      setIsPriorityInvalid(false); 
 
       toast({
         title: "Task added successfully.",
@@ -57,6 +74,20 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
         placeholder="Enter a new task..."
         mb={4}
       />
+      <Select
+        value={priority}
+        onChange={(e) => {
+          setIsPriorityInvalid(false); 
+          setPriority(e.target.value);
+        }}
+        placeholder="Select priority"
+        mb={4}
+        isInvalid={isPriorityInvalid} 
+      >
+        <option value="High">High</option>
+        <option value="Medium">Medium</option>
+        <option value="Low">Low</option>
+      </Select>
       <Button type="submit" colorScheme="blue">
         Add Task
       </Button>

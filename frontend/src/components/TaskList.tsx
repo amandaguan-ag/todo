@@ -1,4 +1,3 @@
-import React from "react";
 import { Box, List } from "@chakra-ui/react";
 import axios from "axios";
 import TaskItem from "./TaskItem";
@@ -7,6 +6,7 @@ interface Task {
   id: number;
   title: string;
   completed: boolean;
+  priority: string;
 }
 
 interface TaskListProps {

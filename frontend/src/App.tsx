@@ -4,13 +4,27 @@ import axios from "axios";
 import TaskList from "./components/TaskList";
 import AddTask from "./components/AddTask";
 
+interface Task {
+  id: number;
+  title: string;
+  completed: boolean;
+  priority: "High" | "Medium" | "Low";
+}
+
 const App: React.FC = () => {
-  const [tasks, setTasks] = useState([]); 
+  const [tasks, setTasks] = useState<Task[]>([]);
 
   const fetchTasks = async () => {
     try {
       const response = await axios.get("http://localhost:3005/tasks");
-      setTasks(response.data);
+      const fetchedTasks: Task[] = response.data; 
+
+      const sortedTasks = fetchedTasks.sort((a: Task, b: Task) => {
+        const priorityOrder = { High: 1, Medium: 2, Low: 3 };
+        return priorityOrder[a.priority] - priorityOrder[b.priority];
+      });
+
+      setTasks(sortedTasks);
     } catch (error) {
       console.error("Failed to fetch tasks:", error);
     }
