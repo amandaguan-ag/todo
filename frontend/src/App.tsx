@@ -17,8 +17,6 @@ const App: React.FC = () => {
         const priorityOrder = { High: 1, Medium: 2, Low: 3 };
         if (priorityOrder[a.priority] !== priorityOrder[b.priority]) {
           return priorityOrder[a.priority] - priorityOrder[b.priority];
-        } else if (a.completed !== b.completed) {
-          return a.completed === false ? -1 : 1;
         } else {
           return (
             new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
@@ -54,8 +52,7 @@ const App: React.FC = () => {
             </Text>
             <Text fontSize="sm">
               Tasks are prioritized by <strong>Priority Level</strong> (High to
-              Low), then by <strong>Completion Status</strong> (Incomplete tasks
-              first), and finally by <strong>Creation Date</strong> (Oldest to
+              Low), then by <strong>Creation Date</strong> (Oldest to
               Newest).
             </Text>
           </Box>
