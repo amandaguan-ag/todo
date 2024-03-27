@@ -85,15 +85,7 @@ cd frontend
 npm start
 ```
 
-The React application should now be running on [http://localhost:3000](http://localhost:3000) and the NestJS server on [http://localhost:3001](http://localhost:3001).
-
-## Using the Application
-
-To use the Todo List Application, follow these steps:
-
-1. Open your web browser and navigate to [http://localhost:3000](http://localhost:3000).
-2. Add a todo by clicking the "Add Todo" button.
-3. Your todo item should now be saved to the PostgreSQL database.
+The React application should now be running on [http://localhost:3000](http://localhost:3000) and the NestJS server on [http://localhost:3005](http://localhost:3005).
 
 ## License
 
