@@ -57,14 +57,14 @@ const App: React.FC = () => {
             </Text>
           </Box>
           <Heading size="md" mb={4}>
-            Not Completed Tasks
+            Todo
           </Heading>
           <TaskList
             onTasksUpdated={handleRefreshTasks}
             tasks={notCompletedTasks}
           />
           <Heading size="md" mb={4}>
-            Completed Tasks
+            Done
           </Heading>
           <TaskList
             onTasksUpdated={handleRefreshTasks}
