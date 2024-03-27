@@ -1,43 +1,39 @@
-import React, { useState } from "react";
-import logo from "./logo.svg";
-import "./App.css";
-import { ChakraProvider, Button, Box } from "@chakra-ui/react";
-import axios, { AxiosResponse, AxiosError } from "axios";
+import React, { useState, useEffect } from "react";
+import { ChakraProvider, Box, VStack } from "@chakra-ui/react";
+import axios from "axios";
+import TaskList from "./components/TaskList";
+import AddTask from "./components/AddTask";
 
-function App() {
-  const [firstName, setFirstName] = useState("Callie");
-  const [lastName, setLastName] = useState("Stoscup");
+const App: React.FC = () => {
+  const [tasks, setTasks] = useState([]); 
 
-  const onChangeFirstName = (event: any) => {
-    setFirstName(event.target.value);
+  const fetchTasks = async () => {
+    try {
+      const response = await axios.get("http://localhost:3005/tasks");
+      setTasks(response.data);
+    } catch (error) {
+      console.error("Failed to fetch tasks:", error);
+    }
   };
-  const onChangeLastName = (event: any) => {
-    setLastName(event.target.value);
+
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  const handleRefreshTasks = () => {
+    fetchTasks();
   };
-  const onClick = async () => {
-    const response = await axios.post("http://localhost:3005/name", {
-      firstName,
-      lastName,
-    });
-    console.log("RESPONSE: ", response.data);
-  };
+
   return (
     <ChakraProvider>
-      <Box m={10} display="flex" gap={4}>
-        <input
-          onChange={onChangeFirstName}
-          placeholder="Type in a first name..."
-        />
-        <input
-          onChange={onChangeLastName}
-          placeholder="Type in a last name..."
-        />
-        <Button onClick={onClick} colorScheme="purple">
-          Add
-        </Button>
+      <Box m={10}>
+        <VStack spacing={8}>
+          <AddTask onTasksUpdated={handleRefreshTasks} />
+          <TaskList onTasksUpdated={handleRefreshTasks} tasks={tasks} />
+        </VStack>
       </Box>
     </ChakraProvider>
   );
-}
+};
 
 export default App;

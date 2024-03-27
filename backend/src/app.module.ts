@@ -2,9 +2,8 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TodosModule } from './todos/todos.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { Name } from './name.entity';
+import { Task } from './task.entity';
 import typeorm from './config/typeorm';
 
 @Module({
@@ -18,8 +17,7 @@ import typeorm from './config/typeorm';
       useFactory: async (configService: ConfigService) =>
         configService.get('typeorm'),
     }),
-    TypeOrmModule.forFeature([Name]),
-    TodosModule,
+    TypeOrmModule.forFeature([Task]),
   ],
   controllers: [AppController],
   providers: [AppService],

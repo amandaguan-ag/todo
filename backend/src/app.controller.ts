@@ -1,21 +1,35 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Post('/name')
-  async addName(
-    @Body('firstName') firstName: string,
-    @Body('lastName') lastName: string,
-  ) {
-    console.log(firstName, lastName);
-    return await this.appService.addName(firstName, lastName);
+  @Post('/task')
+  async addTask(@Body('title') title: string) {
+      return await this.appService.addTask(title);
   }
 
-  @Get()
-  getNames() {
-    return this.appService.getNames();
+  @Get('/tasks')
+  getTasks() {
+    return this.appService.getTasks();
+  }
+
+  @Patch('/task/:id/completion')
+  async toggleTaskCompletion(@Param('id') id: string) {
+    return await this.appService.toggleTaskCompletion(+id);
+  }
+
+  @Delete('/task/:id')
+  async deleteTask(@Param('id') id: string) {
+    return await this.appService.deleteTask(+id);
   }
 }
