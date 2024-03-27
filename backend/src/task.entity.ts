@@ -1,4 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class Task {
@@ -14,4 +19,7 @@ export class Task {
   // null priority will be 'Medium' at the moment
   @Column({ default: 'Medium' })
   priority: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
 }
