@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import {
   ChakraProvider,
   Box,
+  Flex,
   VStack,
   Heading,
   Text,
@@ -71,24 +72,46 @@ const App: React.FC = () => {
               to Newest).
             </Text>
           </Container>
-          <Box p={5} shadow="md" borderWidth="1px" borderRadius="lg" mb={4}>
-            <Heading size="md" mb={4}>
-              Todo
-            </Heading>
-            <TaskList
-              onTasksUpdated={handleRefreshTasks}
-              tasks={notCompletedTasks}
-            />
-          </Box>
-          <Box p={5} shadow="md" borderWidth="1px" borderRadius="lg">
-            <Heading size="md" mb={4}>
-              Done
-            </Heading>
-            <TaskList
-              onTasksUpdated={handleRefreshTasks}
-              tasks={completedTasks}
-            />
-          </Box>
+          <Flex
+            direction={{ base: "column", md: "row" }}
+            width="full"
+            justify="space-between"
+          >
+            <Box
+              p={5}
+              shadow="md"
+              borderWidth="1px"
+              borderRadius="lg"
+              mb={4}
+              flex="1"
+              marginRight={2}
+            >
+              <Heading size="md" mb={4}>
+                Todo
+              </Heading>
+              <TaskList
+                onTasksUpdated={handleRefreshTasks}
+                tasks={notCompletedTasks}
+              />
+            </Box>
+            <Box
+              p={5}
+              shadow="md"
+              borderWidth="1px"
+              borderRadius="lg"
+              mb={4}
+              flex="1"
+              marginLeft={2}
+            >
+              <Heading size="md" mb={4}>
+                Done
+              </Heading>
+              <TaskList
+                onTasksUpdated={handleRefreshTasks}
+                tasks={completedTasks}
+              />
+            </Box>
+          </Flex>
         </VStack>
       </Box>
     </ChakraProvider>
