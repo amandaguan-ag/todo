@@ -22,7 +22,7 @@ const Home: React.FC<HomeProps> = ({ tasks, onTasksUpdated }) => {
   const notCompletedTasks = tasks.filter((task) => !task.completed);
 
   return (
-    <VStack spacing={8}>
+    <VStack spacing={8} align="stretch">
       <AddTask onTasksUpdated={onTasksUpdated} />
       <Container
         centerContent
@@ -30,6 +30,8 @@ const Home: React.FC<HomeProps> = ({ tasks, onTasksUpdated }) => {
         bg="gray.100"
         borderRadius="md"
         boxShadow="xl"
+        maxW="80%" 
+        width="auto" 
       >
         <Text fontSize="md" fontWeight="bold">
           How Tasks Are Sorted:
