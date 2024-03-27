@@ -1,5 +1,14 @@
 import { useState } from "react";
-import { Button, Input, useToast, Select } from "@chakra-ui/react";
+import {
+  Button,
+  Input,
+  useToast,
+  Select,
+  VStack,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+} from "@chakra-ui/react";
 import axios from "axios";
 
 interface AddTaskProps {
@@ -8,12 +17,14 @@ interface AddTaskProps {
 
 const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
   const [newTaskTitle, setNewTaskTitle] = useState("");
-  const [priority, setPriority] = useState(""); 
-  const [isPriorityInvalid, setIsPriorityInvalid] = useState(false); 
+  const [priority, setPriority] = useState("");
+  const [isPriorityInvalid, setIsPriorityInvalid] = useState(false);
+  const [submitted, setSubmitted] = useState(false); 
   const toast = useToast();
 
   const addTask = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitted(true); 
 
     if (!newTaskTitle.trim()) {
       toast({
@@ -26,7 +37,7 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
     }
 
     if (!priority) {
-      setIsPriorityInvalid(true); 
+      setIsPriorityInvalid(true);
       toast({
         title: "Priority selection is required.",
         description: "Please select a priority for the task.",
@@ -43,8 +54,9 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
         priority,
       });
       setNewTaskTitle("");
-      setPriority(""); 
-      setIsPriorityInvalid(false); 
+      setPriority("");
+      setIsPriorityInvalid(false);
+      setSubmitted(false); 
 
       toast({
         title: "Task added successfully.",
@@ -65,33 +77,42 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
   };
 
   return (
-    <form onSubmit={addTask}>
-      <label htmlFor="new-task-title">New Task Title</label>
-      <Input
-        id="new-task-title"
-        value={newTaskTitle}
-        onChange={(e) => setNewTaskTitle(e.target.value)}
-        placeholder="Enter a new task..."
-        mb={4}
-      />
-      <Select
-        value={priority}
-        onChange={(e) => {
-          setIsPriorityInvalid(false); 
-          setPriority(e.target.value);
-        }}
-        placeholder="Select priority"
-        mb={4}
-        isInvalid={isPriorityInvalid} 
-      >
-        <option value="High">High</option>
-        <option value="Medium">Medium</option>
-        <option value="Low">Low</option>
-      </Select>
-      <Button type="submit" colorScheme="blue">
+    <VStack as="form" onSubmit={addTask} spacing={4} align="stretch">
+      <FormControl isInvalid={submitted && !newTaskTitle.trim()}>
+        <FormLabel htmlFor="new-task-title">New Task Title</FormLabel>
+        <Input
+          id="new-task-title"
+          value={newTaskTitle}
+          onChange={(e) => setNewTaskTitle(e.target.value)}
+          placeholder="Enter a new task..."
+        />
+        {submitted && !newTaskTitle.trim() && (
+          <FormErrorMessage>Task title is required.</FormErrorMessage>
+        )}
+      </FormControl>
+      <FormControl isInvalid={submitted && isPriorityInvalid}>
+        <FormLabel htmlFor="task-priority">Priority</FormLabel>
+        <Select
+          id="task-priority"
+          value={priority}
+          onChange={(e) => {
+            setIsPriorityInvalid(false);
+            setPriority(e.target.value);
+          }}
+          placeholder="Select priority"
+        >
+          <option value="High">High</option>
+          <option value="Medium">Medium</option>
+          <option value="Low">Low</option>
+        </Select>
+        {submitted && isPriorityInvalid && (
+          <FormErrorMessage>Priority selection is required.</FormErrorMessage>
+        )}
+      </FormControl>
+      <Button type="submit" colorScheme="teal" size="lg">
         Add Task
       </Button>
-    </form>
+    </VStack>
   );
 };
 
