@@ -34,8 +34,8 @@ const TaskItem: React.FC<TaskProps> = ({ task, onToggle }) => {
   return (
     <ListItem>
       <Grid
-        templateColumns="repeat(3, 1fr) auto" 
-        gap={4} 
+        templateColumns="2fr 1fr 1fr auto" 
+        gap={4}
         alignItems="center"
         py={2}
       >
@@ -48,7 +48,7 @@ const TaskItem: React.FC<TaskProps> = ({ task, onToggle }) => {
           colorScheme="red"
           size="sm"
           onClick={deleteTask}
-          justifySelf="end" 
+          justifySelf="end"
         >
           Delete
         </Button>
