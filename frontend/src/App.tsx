@@ -3,13 +3,7 @@ import { ChakraProvider, Box, VStack, Heading } from "@chakra-ui/react";
 import axios from "axios";
 import TaskList from "./components/TaskList";
 import AddTask from "./components/AddTask";
-
-interface Task {
-  id: number;
-  title: string;
-  completed: boolean;
-  priority: "High" | "Medium" | "Low";
-}
+import { Task } from "./types/Task"; 
 
 const App: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);

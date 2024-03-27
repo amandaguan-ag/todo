@@ -1,13 +1,7 @@
 import { Box, List } from "@chakra-ui/react";
 import axios from "axios";
 import TaskItem from "./TaskItem";
-
-interface Task {
-  id: number;
-  title: string;
-  completed: boolean;
-  priority: string;
-}
+import { Task } from "../types/Task"; 
 
 interface TaskListProps {
   tasks: Task[];
