@@ -1,4 +1,4 @@
-import { Checkbox, ListItem, Button, Text } from "@chakra-ui/react";
+import { Checkbox, ListItem, Button, Text, Grid } from "@chakra-ui/react";
 import axios from "axios";
 import { Task } from "../types/Task";
 
@@ -32,24 +32,27 @@ const TaskItem: React.FC<TaskProps> = ({ task, onToggle }) => {
   };
 
   return (
-    <ListItem
-      display="flex"
-      justifyContent="space-between"
-      alignItems="center"
-      py={2}
-    >
-      <Checkbox isChecked={task.completed} onChange={toggleCompletion}>
-        {task.title}
-        <Text as="span" ml={4} fontWeight="bold">
-          {task.priority} Priority
-        </Text>
-        <Text as="span" ml={4} color="gray.500">
-          {formatDate(task.createdAt)}
-        </Text>
-      </Checkbox>
-      <Button colorScheme="red" size="sm" onClick={deleteTask}>
-        Delete
-      </Button>
+    <ListItem>
+      <Grid
+        templateColumns="repeat(3, 1fr) auto" 
+        gap={4} 
+        alignItems="center"
+        py={2}
+      >
+        <Checkbox isChecked={task.completed} onChange={toggleCompletion}>
+          {task.title}
+        </Checkbox>
+        <Text fontWeight="bold">{task.priority} Priority</Text>
+        <Text color="gray.500">{formatDate(task.createdAt)}</Text>
+        <Button
+          colorScheme="red"
+          size="sm"
+          onClick={deleteTask}
+          justifySelf="end" 
+        >
+          Delete
+        </Button>
+      </Grid>
     </ListItem>
   );
 };
