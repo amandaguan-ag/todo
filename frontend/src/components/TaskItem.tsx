@@ -1,6 +1,6 @@
 import { Checkbox, ListItem, Button, Text } from "@chakra-ui/react";
 import axios from "axios";
-import { Task } from "../types/Task"; 
+import { Task } from "../types/Task";
 
 interface TaskProps {
   task: Task;
@@ -10,13 +10,7 @@ interface TaskProps {
 const TaskItem: React.FC<TaskProps> = ({ task, onToggle }) => {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short", 
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+    return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
   };
 
   const toggleCompletion = async () => {
@@ -38,10 +32,18 @@ const TaskItem: React.FC<TaskProps> = ({ task, onToggle }) => {
   };
 
   return (
-    <ListItem display="flex" justifyContent="space-between" alignItems="center">
+    <ListItem
+      display="flex"
+      justifyContent="space-between"
+      alignItems="center"
+      py={2}
+    >
       <Checkbox isChecked={task.completed} onChange={toggleCompletion}>
-        {task.title} <Text ml={4}>({task.priority} priority)</Text>
-        <Text fontSize="sm" ml={4}>
+        {task.title}
+        <Text as="span" ml={4} fontWeight="bold">
+          {task.priority} Priority
+        </Text>
+        <Text as="span" ml={4} color="gray.500">
           {formatDate(task.createdAt)}
         </Text>
       </Checkbox>
