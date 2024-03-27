@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { ChakraProvider, Box, VStack, Heading, Text } from "@chakra-ui/react";
 import axios from "axios";
 import TaskList from "./components/TaskList";
@@ -52,24 +52,27 @@ const App: React.FC = () => {
             </Text>
             <Text fontSize="sm">
               Tasks are prioritized by <strong>Priority Level</strong> (High to
-              Low), then by <strong>Creation Date</strong> (Oldest to
-              Newest).
+              Low), then by <strong>Creation Date</strong> (Oldest to Newest).
             </Text>
           </Box>
-          <Heading size="md" mb={4}>
-            Todo
-          </Heading>
-          <TaskList
-            onTasksUpdated={handleRefreshTasks}
-            tasks={notCompletedTasks}
-          />
-          <Heading size="md" mb={4}>
-            Done
-          </Heading>
-          <TaskList
-            onTasksUpdated={handleRefreshTasks}
-            tasks={completedTasks}
-          />
+          <Box p={5} shadow="md" borderWidth="1px" borderRadius="lg" mb={4}>
+            <Heading size="md" mb={4}>
+              Todo
+            </Heading>
+            <TaskList
+              onTasksUpdated={handleRefreshTasks}
+              tasks={notCompletedTasks}
+            />
+          </Box>
+          <Box p={5} shadow="md" borderWidth="1px" borderRadius="lg">
+            <Heading size="md" mb={4}>
+              Done
+            </Heading>
+            <TaskList
+              onTasksUpdated={handleRefreshTasks}
+              tasks={completedTasks}
+            />
+          </Box>
         </VStack>
       </Box>
     </ChakraProvider>
