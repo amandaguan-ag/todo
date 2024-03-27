@@ -1,5 +1,13 @@
 import { useState, useEffect } from "react";
-import { ChakraProvider, Box, VStack, Heading, Text } from "@chakra-ui/react";
+import {
+  ChakraProvider,
+  Box,
+  VStack,
+  Heading,
+  Text,
+  Badge,
+  Container,
+} from "@chakra-ui/react";
 import axios from "axios";
 import TaskList from "./components/TaskList";
 import AddTask from "./components/AddTask";
@@ -46,15 +54,23 @@ const App: React.FC = () => {
       <Box m={10}>
         <VStack spacing={8}>
           <AddTask onTasksUpdated={handleRefreshTasks} />
-          <Box textAlign="center" mb={6}>
+          <Container
+            centerContent
+            p={4}
+            bg="gray.100"
+            borderRadius="md"
+            boxShadow="xl"
+          >
             <Text fontSize="md" fontWeight="bold">
               How Tasks Are Sorted:
             </Text>
             <Text fontSize="sm">
-              Tasks are prioritized by <strong>Priority Level</strong> (High to
-              Low), then by <strong>Creation Date</strong> (Oldest to Newest).
+              Tasks are prioritized by{" "}
+              <Badge colorScheme="purple">Priority Level</Badge> (High to Low),
+              then by <Badge colorScheme="green">Creation Date</Badge> (Oldest
+              to Newest).
             </Text>
-          </Box>
+          </Container>
           <Box p={5} shadow="md" borderWidth="1px" borderRadius="lg" mb={4}>
             <Heading size="md" mb={4}>
               Todo
