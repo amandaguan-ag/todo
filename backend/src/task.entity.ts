@@ -10,4 +10,8 @@ export class Task {
 
   @Column({ default: false })
   completed: boolean;
+
+  // null priority will be 'Medium' at the moment
+  @Column({ default: 'Medium' })
+  priority: string;
 }

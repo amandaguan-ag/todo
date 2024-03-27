@@ -10,9 +10,10 @@ export class AppService {
     private taskRepository: Repository<Task>,
   ) {}
 
-  async addTask(title: string) {
+  async addTask(title: string, priority: string) {
     await this.taskRepository.save({
       title,
+      priority, 
     });
     return this.getTasks();
   }
