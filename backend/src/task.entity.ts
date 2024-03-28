@@ -11,12 +11,11 @@ export class Task {
   id: number;
 
   @Column()
-  title: string;
+  description: string;
 
   @Column({ default: false })
   completed: boolean;
 
-  // null priority will be 'Medium' at the moment
   @Column({ default: 'Medium' })
   priority: string;
 

@@ -40,7 +40,7 @@ const TaskItem: React.FC<TaskProps> = ({ task, onToggle }) => {
         py={2}
       >
         <Checkbox isChecked={task.completed} onChange={toggleCompletion}>
-          {task.title}
+          {task.description}
         </Checkbox>
         <Text fontWeight="bold">{task.priority} Priority</Text>
         <Text color="gray.500">{formatDate(task.createdAt)}</Text>

@@ -34,12 +34,15 @@ describe('AppController', () => {
   });
 
   it('should call appService.addTask when a new task is added', async () => {
-    const taskTitle = 'New Task';
-    await appController.addTask(taskTitle);
-    expect(appService.addTask).toHaveBeenCalledWith(taskTitle);
+    const newTaskData = {
+      description: 'New Task',
+      priority: 'Medium',
+    };
+    await appController.addTask(newTaskData);
+    expect(appService.addTask).toHaveBeenCalledWith(newTaskData);
   });
   it('should retrieve all tasks successfully', async () => {
-    const mockTasks = [{ id: 1, title: 'Test Task', completed: false }];
+    const mockTasks = [{ id: 1, description: 'Test Task', completed: false }];
     appService.getTasks.mockResolvedValue(mockTasks);
 
     const tasks = await appController.getTasks();
@@ -50,7 +53,7 @@ describe('AppController', () => {
 
   it('should toggle task completion successfully', async () => {
     const taskId = 1;
-    const mockTask = { id: taskId, title: 'Test Task', completed: false };
+    const mockTask = { id: taskId, description: 'Test Task', completed: false }; // Changed title to description
     appService.toggleTaskCompletion.mockResolvedValue({
       ...mockTask,
       completed: !mockTask.completed,
@@ -65,7 +68,7 @@ describe('AppController', () => {
   });
   it('should delete a task successfully', async () => {
     const taskId = 1;
-    appService.deleteTask.mockResolvedValue(undefined); 
+    appService.deleteTask.mockResolvedValue(undefined);
 
     await appController.deleteTask(taskId.toString());
 

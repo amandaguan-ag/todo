@@ -18,7 +18,7 @@ interface AddTaskProps {
 }
 
 const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
-  const [newTaskTitle, setNewTaskTitle] = useState("");
+  const [newTaskDescription, setNewTaskDescription] = useState("");
   const [priority, setPriority] = useState("");
   const [isPriorityInvalid, setIsPriorityInvalid] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -28,9 +28,9 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
     e.preventDefault();
     setSubmitted(true);
 
-    if (!newTaskTitle.trim()) {
+    if (!newTaskDescription.trim()) {
       toast({
-        title: "Please enter a task title.",
+        title: "Please enter a task description.",
         status: "warning",
         duration: 2000,
         isClosable: true,
@@ -52,10 +52,10 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
 
     try {
       await axios.post("http://localhost:3005/task", {
-        title: newTaskTitle.trim(),
+        description: newTaskDescription.trim(),
         priority,
       });
-      setNewTaskTitle("");
+      setNewTaskDescription("");
       setPriority("");
       setIsPriorityInvalid(false);
       setSubmitted(false);
@@ -90,17 +90,17 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
         Add Task
       </Heading>{" "}
       <HStack spacing={4} align="flex-end">
-        <FormControl isInvalid={submitted && !newTaskTitle.trim()} flex={2}>
-          <FormLabel htmlFor="new-task-title">New Task Title</FormLabel>
+        <FormControl isInvalid={submitted && !newTaskDescription.trim()} flex={2}>
+          <FormLabel htmlFor="new-task-description">New Task Description</FormLabel>
           <Input
-            id="new-task-title"
-            value={newTaskTitle}
-            onChange={(e) => setNewTaskTitle(e.target.value)}
+            id="new-task-description"
+            value={newTaskDescription}
+            onChange={(e) => setNewTaskDescription(e.target.value)}
             placeholder="Enter a new task..."
             size="md"
           />
-          {submitted && !newTaskTitle.trim() && (
-            <FormErrorMessage>Task title is required.</FormErrorMessage>
+          {submitted && !newTaskDescription.trim() && (
+            <FormErrorMessage>Task description is required.</FormErrorMessage>
           )}
         </FormControl>
         <FormControl isInvalid={submitted && isPriorityInvalid} flex={1}>
