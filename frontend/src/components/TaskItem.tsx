@@ -5,9 +5,10 @@ import { Task } from "../types/Task";
 interface TaskProps {
   task: Task;
   onToggle: () => void;
+  isHighlighted?: boolean;
 }
 
-const TaskItem: React.FC<TaskProps> = ({ task, onToggle }) => {
+const TaskItem: React.FC<TaskProps> = ({ task, onToggle, isHighlighted }) => {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
@@ -34,10 +35,13 @@ const TaskItem: React.FC<TaskProps> = ({ task, onToggle }) => {
   return (
     <ListItem>
       <Grid
-        templateColumns="2fr 1fr 1fr auto" 
+        templateColumns="2fr 1fr 1fr auto"
         gap={4}
         alignItems="center"
         py={2}
+        bg={isHighlighted ? "yellow.100" : "white"}
+        borderWidth={isHighlighted ? "2px" : "1px"}
+        borderColor={isHighlighted ? "yellow.300" : "gray.200"}
       >
         <Checkbox isChecked={task.completed} onChange={toggleCompletion}>
           {task.description}

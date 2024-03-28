@@ -30,8 +30,8 @@ const Home: React.FC<HomeProps> = ({ tasks, onTasksUpdated }) => {
         bg="gray.100"
         borderRadius="md"
         boxShadow="xl"
-        maxW="80%" 
-        width="auto" 
+        maxW="80%"
+        width="auto"
       >
         <Text fontSize="md" fontWeight="bold">
           How Tasks Are Sorted:
@@ -60,7 +60,11 @@ const Home: React.FC<HomeProps> = ({ tasks, onTasksUpdated }) => {
           <Heading size="md" mb={4}>
             Todo
           </Heading>
-          <TaskList onTasksUpdated={onTasksUpdated} tasks={notCompletedTasks} />
+          <TaskList
+            onTasksUpdated={onTasksUpdated}
+            tasks={notCompletedTasks}
+            isTodoSection={true}
+          />
         </Box>
         <Box
           p={5}
@@ -74,7 +78,11 @@ const Home: React.FC<HomeProps> = ({ tasks, onTasksUpdated }) => {
           <Heading size="md" mb={4}>
             Done
           </Heading>
-          <TaskList onTasksUpdated={onTasksUpdated} tasks={completedTasks} />
+          <TaskList
+            onTasksUpdated={onTasksUpdated}
+            tasks={completedTasks}
+            isTodoSection={false}
+          />
         </Box>
       </Flex>
     </VStack>
