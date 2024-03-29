@@ -35,7 +35,11 @@ const TaskItem: React.FC<TaskProps> = ({ task, onToggle, isHighlighted }) => {
   return (
     <ListItem>
       <Grid
-        templateColumns="2fr 1fr 1fr auto"
+        templateColumns={{
+          base: "repeat(1, 1fr)", 
+          md: "repeat(3, 1fr) auto", 
+          lg: "2fr 1fr 1fr auto", 
+        }}
         gap={4}
         alignItems="center"
         py={2}
