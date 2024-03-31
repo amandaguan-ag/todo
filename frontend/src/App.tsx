@@ -39,7 +39,7 @@ const App: React.FC = () => {
 
   return (
     <ChakraProvider>
-      <Box m={10}>
+      <Box m={10} as="main">
         <Home tasks={tasks} onTasksUpdated={handleRefreshTasks} />
       </Box>
     </ChakraProvider>
