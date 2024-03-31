@@ -23,6 +23,9 @@ const Home: React.FC<HomeProps> = ({ tasks, onTasksUpdated }) => {
 
   return (
     <VStack spacing={8} align="stretch">
+      <Heading as="h1" size="xl" textAlign="center" my={6}>
+        Task Manager
+      </Heading>
       <AddTask onTasksUpdated={onTasksUpdated} />
       <Container
         centerContent
