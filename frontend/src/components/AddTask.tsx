@@ -9,7 +9,8 @@ import {
   FormLabel,
   FormErrorMessage,
   HStack,
-  Heading, 
+  Heading,
+  Text,
 } from "@chakra-ui/react";
 import axios from "axios";
 
@@ -90,8 +91,13 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
         Add Task
       </Heading>{" "}
       <HStack spacing={4} align="flex-end">
-        <FormControl isInvalid={submitted && !newTaskDescription.trim()} flex={2}>
-          <FormLabel htmlFor="new-task-description">New Task Description</FormLabel>
+        <FormControl
+          isInvalid={submitted && !newTaskDescription.trim()}
+          flex={2}
+        >
+          <FormLabel htmlFor="new-task-description">
+            New Task Description
+          </FormLabel>
           <Input
             id="new-task-description"
             value={newTaskDescription}
@@ -123,8 +129,8 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
           )}
         </FormControl>
       </HStack>
-      <Button type="submit" colorScheme="teal" size="lg" alignSelf="flex-end">
-        Add Task
+      <Button type="submit" bg="#0A8080" size="lg" alignSelf="flex-end">
+        <Text color="white">Add Task</Text>
       </Button>
     </VStack>
   );

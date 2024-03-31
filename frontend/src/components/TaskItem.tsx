@@ -36,9 +36,9 @@ const TaskItem: React.FC<TaskProps> = ({ task, onToggle, isHighlighted }) => {
     <ListItem>
       <Grid
         templateColumns={{
-          base: "repeat(1, 1fr)", 
-          md: "repeat(3, 1fr) auto", 
-          lg: "2fr 1fr 1fr auto", 
+          base: "repeat(1, 1fr)",
+          md: "repeat(3, 1fr) auto",
+          lg: "2fr 1fr 1fr auto",
         }}
         gap={4}
         alignItems="center"
@@ -51,14 +51,9 @@ const TaskItem: React.FC<TaskProps> = ({ task, onToggle, isHighlighted }) => {
           {task.description}
         </Checkbox>
         <Text fontWeight="bold">{task.priority} Priority</Text>
-        <Text color="gray.500">{formatDate(task.createdAt)}</Text>
-        <Button
-          colorScheme="red"
-          size="sm"
-          onClick={deleteTask}
-          justifySelf="end"
-        >
-          Delete
+        <Text color="#6B6666">{formatDate(task.createdAt)}</Text>
+        <Button bg="#DB0A0A" size="sm" onClick={deleteTask} justifySelf="end">
+          <Text color="white">Delete</Text>
         </Button>
       </Grid>
     </ListItem>
