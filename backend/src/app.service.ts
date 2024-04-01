@@ -57,15 +57,43 @@ export class AppService {
     return task;
   }
 
-  async updateTaskDescription(id: number, description: string): Promise<Task> {
-    const task = await this.taskRepository.findOne({ where: { id } });
+  async updateTask(
+    id: number,
+    updateTaskDto: {
+      description?: string;
+      priority?: string;
+      tagNames?: string[];
+    },
+  ): Promise<Task> {
+    const task = await this.taskRepository.findOne({
+      where: { id },
+      relations: ['tags'],
+    });
     if (!task) {
       throw new HttpException(
         `Task with ID ${id} not found.`,
         HttpStatus.NOT_FOUND,
       );
     }
-    task.description = description;
+
+    if (updateTaskDto.description) task.description = updateTaskDto.description;
+    if (updateTaskDto.priority) task.priority = updateTaskDto.priority;
+
+    if (updateTaskDto.tagNames) {
+      const tags = await Promise.all(
+        updateTaskDto.tagNames.map(async (name) => {
+          let tag = await this.tagRepository.findOne({ where: { name } });
+          if (!tag) {
+            tag = this.tagRepository.create({ name });
+            await this.tagRepository.save(tag);
+          }
+          return tag;
+        }),
+      );
+
+      task.tags = tags;
+    }
+
     await this.taskRepository.save(task);
     return task;
   }

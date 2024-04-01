@@ -29,15 +29,19 @@ export class AppController {
   async toggleTaskCompletion(@Param('id') id: string) {
     return await this.appService.toggleTaskCompletion(+id);
   }
-
-  @Patch('/task/:id/description')
-  async updateTaskDescription(
+  @Patch('/task/:id')
+  async updateTask(
     @Param('id') id: string,
-    @Body('description') description: string,
+    @Body()
+    updateTaskDto: {
+      description?: string;
+      priority?: string;
+      tagNames?: string[];
+    },
   ) {
-    return await this.appService.updateTaskDescription(+id, description);
+    return await this.appService.updateTask(+id, updateTaskDto);
   }
-  
+
   @Delete('/task/:id')
   async deleteTask(@Param('id') id: string) {
     return await this.appService.deleteTask(+id);
