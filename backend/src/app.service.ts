@@ -35,7 +35,7 @@ export class AppService {
       await this.taskRepository.save(newTask);
       return await this.getTasks();
     } catch (error) {
-      console.error(error); 
+      console.error(error);
       throw new HttpException(
         error.message || 'Failed to create task',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -53,6 +53,19 @@ export class AppService {
       throw new Error(`Task with ID ${id} not found.`);
     }
     task.completed = !task.completed;
+    await this.taskRepository.save(task);
+    return task;
+  }
+
+  async updateTaskDescription(id: number, description: string): Promise<Task> {
+    const task = await this.taskRepository.findOne({ where: { id } });
+    if (!task) {
+      throw new HttpException(
+        `Task with ID ${id} not found.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    task.description = description;
     await this.taskRepository.save(task);
     return task;
   }

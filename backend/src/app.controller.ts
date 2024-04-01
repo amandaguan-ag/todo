@@ -30,6 +30,14 @@ export class AppController {
     return await this.appService.toggleTaskCompletion(+id);
   }
 
+  @Patch('/task/:id/description')
+  async updateTaskDescription(
+    @Param('id') id: string,
+    @Body('description') description: string,
+  ) {
+    return await this.appService.updateTaskDescription(+id, description);
+  }
+  
   @Delete('/task/:id')
   async deleteTask(@Param('id') id: string) {
     return await this.appService.deleteTask(+id);
