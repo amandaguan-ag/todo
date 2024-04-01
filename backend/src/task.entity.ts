@@ -3,7 +3,10 @@ import {
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
+import { Tag } from './tag.entity'; 
 
 @Entity()
 export class Task {
@@ -21,4 +24,8 @@ export class Task {
 
   @CreateDateColumn()
   createdAt: Date;
+
+  @ManyToMany(() => Tag, (tag) => tag.tasks, { cascade: true })
+  @JoinTable()
+  tags: Tag[];
 }
