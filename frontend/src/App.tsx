@@ -1,40 +1,35 @@
 import { useState, useEffect } from "react";
 import { ChakraProvider, Box } from "@chakra-ui/react";
-import axios from "axios";
 import Home from "./components/Home";
 import { Task } from "./types/Task";
+import { fetchTasks } from "./api/tasksApi"; 
 
 const App: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
 
-  const fetchTasks = async () => {
+  const loadTasks = async () => {
     try {
-      const response = await axios.get("http://localhost:3005/tasks");
-      const fetchedTasks: Task[] = response.data;
-
+      const fetchedTasks: Task[] = await fetchTasks();
       fetchedTasks.sort((a, b) => {
         const priorityOrder = { High: 1, Medium: 2, Low: 3 };
-        if (priorityOrder[a.priority] !== priorityOrder[b.priority]) {
-          return priorityOrder[a.priority] - priorityOrder[b.priority];
-        } else {
-          return (
-            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-          );
-        }
+        return (
+          priorityOrder[a.priority] - priorityOrder[b.priority] ||
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
       });
 
       setTasks(fetchedTasks);
     } catch (error) {
-      console.error("Failed to fetch tasks:", error);
+      console.error("Failed to load tasks:", error);
     }
   };
 
   useEffect(() => {
-    fetchTasks();
+    loadTasks();
   }, []);
 
   const handleRefreshTasks = () => {
-    fetchTasks();
+    loadTasks();
   };
 
   return (

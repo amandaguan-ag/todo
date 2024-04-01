@@ -8,9 +8,9 @@ import {
   Box,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import axios from "axios";
 import { Task } from "../types/Task";
 import EditTaskModal from "./EditTaskModal";
+import { toggleTaskCompletion, deleteTask } from "../api/tasksApi"; 
 
 interface TaskProps {
   task: Task;
@@ -22,9 +22,7 @@ const TaskItem: React.FC<TaskProps> = ({ task, onToggle, isHighlighted }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const handleOpenEditModal = () => setIsEditModalOpen(true);
-
   const handleCloseEditModal = () => setIsEditModalOpen(false);
-
   const handleUpdateTask = () => {
     onToggle();
     setIsEditModalOpen(false);
@@ -37,31 +35,33 @@ const TaskItem: React.FC<TaskProps> = ({ task, onToggle, isHighlighted }) => {
 
   const toggleCompletion = async () => {
     try {
-      await axios.patch(`http://localhost:3005/task/${task.id}/completion`);
+      await toggleTaskCompletion(task.id);
       onToggle();
     } catch (error) {
       console.error("Failed to toggle task completion:", error);
     }
   };
 
-  const deleteTask = async () => {
+  const handleDeleteTask = async () => {
     try {
-      await axios.delete(`http://localhost:3005/task/${task.id}`);
-      onToggle();
+      await deleteTask(task.id);
+      onToggle(); 
     } catch (error) {
       console.error("Failed to delete task:", error);
     }
   };
-  type TagName = "Work" | "Study" | "Personal";
 
+  type TagName = "Work" | "Study" | "Personal";
   const tagColors: Record<TagName, string> = {
     Work: "blue",
     Study: "green",
     Personal: "red",
   };
+
   function isTagName(tag: any): tag is TagName {
     return tag in tagColors;
   }
+
   const getTagColor = (tag?: string): string => {
     if (tag && isTagName(tag)) {
       return tagColors[tag];
@@ -130,7 +130,7 @@ const TaskItem: React.FC<TaskProps> = ({ task, onToggle, isHighlighted }) => {
               bg="#C83E3E"
               color="white"
               size="sm"
-              onClick={deleteTask}
+              onClick={handleDeleteTask}
               mr={2}
             >
               Delete

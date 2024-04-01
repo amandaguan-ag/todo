@@ -1,7 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
 import { Input, Button } from "@chakra-ui/react";
-import { Task } from "../types/Task"; // Assuming this is where you've defined your Task type
+import { Task } from "../types/Task"; 
+import { updateTaskDescription } from "../api/tasksApi";
 
 // Define the props that EditTaskDescription expects
 interface EditTaskDescriptionProps {
@@ -19,13 +20,7 @@ const EditTaskDescription: React.FC<EditTaskDescriptionProps> = ({ task }) => {
 
   const handleDescriptionUpdate = async () => {
     try {
-      const response = await axios.patch(
-        `http://localhost:3005/task/${task.id}/description`,
-        {
-          description: newDescription,
-        }
-      );
-      // Handle response or refresh the task list to show the updated description
+      await updateTaskDescription(task.id, newDescription);
     } catch (error) {
       console.error("Failed to update task description:", error);
       // Handle error, possibly with a user notification
@@ -40,4 +35,4 @@ const EditTaskDescription: React.FC<EditTaskDescriptionProps> = ({ task }) => {
   );
 };
 
-export default EditTaskDescription; // This line exports the component as default
+export default EditTaskDescription; 

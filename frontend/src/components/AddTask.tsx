@@ -12,7 +12,7 @@ import {
   Heading,
   Text,
 } from "@chakra-ui/react";
-import axios from "axios";
+import { addTask } from "../api/tasksApi";
 
 interface AddTaskProps {
   onTasksUpdated: () => void;
@@ -26,25 +26,14 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
   const [tag, setTag] = useState("");
   const toast = useToast();
 
-  const addTask = async (e: React.FormEvent) => {
+  const handleAddTask = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
 
-    if (!newTaskDescription.trim()) {
+    if (!newTaskDescription.trim() || !priority) {
       toast({
-        title: "Please enter a task description.",
-        status: "warning",
-        duration: 2000,
-        isClosable: true,
-      });
-      return;
-    }
-
-    if (!priority) {
-      setIsPriorityInvalid(true);
-      toast({
-        title: "Priority selection is required.",
-        description: "Please select a priority for the task.",
+        title: "Validation Error",
+        description: "Please ensure all fields are filled out correctly.",
         status: "warning",
         duration: 2000,
         isClosable: true,
@@ -53,23 +42,25 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
     }
 
     try {
-      await axios.post("http://localhost:3005/task", {
+      await addTask({
         description: newTaskDescription.trim(),
         priority,
         tagNames: tag ? [tag] : [],
       });
       setNewTaskDescription("");
       setPriority("");
+      setTag("");
       setIsPriorityInvalid(false);
       setSubmitted(false);
-
       toast({
         title: "Task added successfully.",
         status: "success",
         duration: 2000,
         isClosable: true,
       });
+      onTasksUpdated();
     } catch (error) {
+      console.error("An error occurred while adding the task:", error);
       toast({
         title: "An error occurred while adding the task.",
         description: "Please try again.",
@@ -78,13 +69,12 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
         isClosable: true,
       });
     }
-    onTasksUpdated();
   };
 
   return (
     <VStack
       as="form"
-      onSubmit={addTask}
+      onSubmit={handleAddTask}
       spacing={4}
       align="stretch"
       width="full"
