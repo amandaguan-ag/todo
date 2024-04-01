@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -15,6 +15,8 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { Task } from "../types/Task";
+
+const allTags = ["Work", "Personal", "Urgent"];
 
 interface EditTaskModalProps {
   isOpen: boolean;
@@ -36,7 +38,15 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
   );
 
   const handlePriorityChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setPriority(event.target.value as typeof priority); 
+    setPriority(event.target.value as typeof priority);
+  };
+
+  const handleTagsChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    const selectedOptions = Array.from(
+      event.target.selectedOptions,
+      (option) => option.value
+    );
+    setTagNames(selectedOptions);
   };
 
   const handleSave = async () => {
@@ -76,6 +86,16 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
               <option value="High">High</option>
               <option value="Medium">Medium</option>
               <option value="Low">Low</option>
+            </Select>
+          </FormControl>
+          <FormControl id="task-tags" mt={4}>
+            <FormLabel>Tags</FormLabel>
+            <Select multiple value={tagNames} onChange={handleTagsChange}>
+              {allTags.map((tag) => (
+                <option key={tag} value={tag}>
+                  {tag}
+                </option>
+              ))}
             </Select>
           </FormControl>
         </ModalBody>
