@@ -1,12 +1,5 @@
 import { useState } from "react";
-import {
-  Checkbox,
-  ListItem,
-  Button,
-  Text,
-  Grid,
-  Box,
-} from "@chakra-ui/react";
+import { Checkbox, ListItem, Button, Text, Grid, Box } from "@chakra-ui/react";
 import axios from "axios";
 import { Task } from "../types/Task";
 import EditTaskModal from "./EditTaskModal";
@@ -46,7 +39,7 @@ const TaskItem: React.FC<TaskProps> = ({ task, onToggle, isHighlighted }) => {
   const deleteTask = async () => {
     try {
       await axios.delete(`http://localhost:3005/task/${task.id}`);
-      onToggle();
+      onToggle(); 
     } catch (error) {
       console.error("Failed to delete task:", error);
     }
@@ -65,7 +58,7 @@ const TaskItem: React.FC<TaskProps> = ({ task, onToggle, isHighlighted }) => {
     if (tag && isTagName(tag)) {
       return tagColors[tag];
     }
-    return "gray";
+    return "transparent"; 
   };
 
   return (
@@ -80,7 +73,9 @@ const TaskItem: React.FC<TaskProps> = ({ task, onToggle, isHighlighted }) => {
         <Box
           w="100%"
           h="10px"
-          bg={task.tags?.length ? getTagColor(task.tags[0].name) : "gray"}
+          bg={
+            task.tags?.length ? getTagColor(task.tags[0].name) : "transparent"
+          } 
         />
         <Grid
           templateColumns="repeat(3, 1fr) auto auto"
@@ -99,7 +94,9 @@ const TaskItem: React.FC<TaskProps> = ({ task, onToggle, isHighlighted }) => {
           <Button colorScheme="red" size="sm" onClick={deleteTask}>
             Delete
           </Button>
-          <Button onClick={handleOpenEditModal}>Edit</Button>
+          <Button size="sm" onClick={handleOpenEditModal}>
+            Edit
+          </Button>
         </Grid>
       </ListItem>
     </>
