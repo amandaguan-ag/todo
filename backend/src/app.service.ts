@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './task.entity';
+import { Tag } from './tag.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -8,12 +9,29 @@ export class AppService {
   constructor(
     @InjectRepository(Task)
     private taskRepository: Repository<Task>,
+    @InjectRepository(Tag) 
+    private tagRepository: Repository<Tag>, 
   ) {}
 
-  async addTask(taskData: { description: string; priority: string }) {
-    const newTask = this.taskRepository.create(taskData); 
+  async addTask(taskData: {
+    description: string;
+    priority: string;
+    tagNames: string[];
+  }) {
+    const tags = await Promise.all(
+      taskData.tagNames.map(async (name) => {
+        let tag = await this.tagRepository.findOne({ where: { name } });
+        if (!tag) {
+          tag = this.tagRepository.create({ name });
+          await this.tagRepository.save(tag);
+        }
+        return tag;
+      }),
+    );
+
+    const newTask = this.taskRepository.create({ ...taskData, tags }); 
     await this.taskRepository.save(newTask);
-    return this.getTasks();
+    return this.getTasks(); 
   }
 
   async getTasks() {
