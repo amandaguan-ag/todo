@@ -11,6 +11,7 @@ import {
 import { Task } from "../types/Task";
 import EditTaskModal from "./EditTaskModal";
 import { toggleTaskCompletion, deleteTask } from "../api/tasksApi"; 
+import { formatDate } from "../utils/taskUtils";
 
 interface TaskProps {
   task: Task;
@@ -26,11 +27,6 @@ const TaskItem: React.FC<TaskProps> = ({ task, onToggle, isHighlighted }) => {
   const handleUpdateTask = () => {
     onToggle();
     setIsEditModalOpen(false);
-  };
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
   };
 
   const toggleCompletion = async () => {
