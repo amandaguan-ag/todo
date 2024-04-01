@@ -1,4 +1,4 @@
-import { Checkbox, ListItem, Button, Text, Grid } from "@chakra-ui/react";
+import { Checkbox, ListItem, Button, Text, Grid, Box } from "@chakra-ui/react";
 import axios from "axios";
 import { Task } from "../types/Task";
 
@@ -31,9 +31,30 @@ const TaskItem: React.FC<TaskProps> = ({ task, onToggle, isHighlighted }) => {
       console.error("Failed to delete task:", error);
     }
   };
+  type TagName = "Work" | "Study" | "Entertainment";
+
+  const tagColors: Record<TagName, string> = {
+    Work: "blue",
+    Study: "green",
+    Entertainment: "red",
+  };
+  function isTagName(tag: any): tag is TagName {
+    return tag in tagColors;
+  }
+  const getTagColor = (tag?: string): string => {
+    if (tag && isTagName(tag)) {
+      return tagColors[tag];
+    }
+    return "gray"; 
+  };
 
   return (
     <ListItem>
+      <Box
+        w="100%"
+        h="10px"
+        bg={task.tags?.length ? getTagColor(task.tags[0].name) : "gray"}
+      />
       <Grid
         templateColumns={{
           base: "repeat(1, 1fr)",

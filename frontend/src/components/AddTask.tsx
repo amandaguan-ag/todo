@@ -23,6 +23,7 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
   const [priority, setPriority] = useState("");
   const [isPriorityInvalid, setIsPriorityInvalid] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [tag, setTag] = useState("");
   const toast = useToast();
 
   const addTask = async (e: React.FormEvent) => {
@@ -55,6 +56,7 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
       await axios.post("http://localhost:3005/task", {
         description: newTaskDescription.trim(),
         priority,
+        tagNames: tag ? [tag] : [], 
       });
       setNewTaskDescription("");
       setPriority("");
@@ -127,6 +129,19 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
           {submitted && isPriorityInvalid && (
             <FormErrorMessage>Priority selection is required.</FormErrorMessage>
           )}
+        </FormControl>
+        <FormControl flex={1}>
+          <FormLabel htmlFor="task-tag">Tag</FormLabel>
+          <Select
+            id="task-tag"
+            value={tag}
+            onChange={(e) => setTag(e.target.value)}
+            placeholder="Select tag"
+          >
+            <option value="Work">Work</option>
+            <option value="Study">Study</option>
+            <option value="Entertainment">Entertainment</option>
+          </Select>
         </FormControl>
       </HStack>
       <Button type="submit" bg="#0A8080" size="lg" alignSelf="flex-end">
