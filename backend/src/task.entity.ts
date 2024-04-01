@@ -1,4 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class Task {
@@ -6,8 +11,14 @@ export class Task {
   id: number;
 
   @Column()
-  title: string;
+  description: string;
 
   @Column({ default: false })
   completed: boolean;
+
+  @Column({ default: 'Medium' })
+  priority: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
 }

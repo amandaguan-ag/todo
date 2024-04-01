@@ -1,26 +1,28 @@
-import React from "react";
 import { Box, List } from "@chakra-ui/react";
-import axios from "axios";
 import TaskItem from "./TaskItem";
-
-interface Task {
-  id: number;
-  title: string;
-  completed: boolean;
-}
+import { Task } from "../types/Task";
 
 interface TaskListProps {
   tasks: Task[];
   onTasksUpdated: () => void;
+  isTodoSection: boolean; 
 }
 
-const TaskList: React.FC<TaskListProps> = ({ tasks, onTasksUpdated }) => {
-
+const TaskList: React.FC<TaskListProps> = ({
+  tasks,
+  onTasksUpdated,
+  isTodoSection,
+}) => {
   return (
     <Box m={10}>
       <List spacing={3} mt="4">
-        {tasks.map((task) => (
-          <TaskItem key={task.id} task={task} onToggle={onTasksUpdated} />
+        {tasks.map((task, index) => (
+          <TaskItem
+            key={task.id}
+            task={task}
+            onToggle={onTasksUpdated}
+            isHighlighted={isTodoSection && index === 0} 
+          />
         ))}
       </List>
     </Box>

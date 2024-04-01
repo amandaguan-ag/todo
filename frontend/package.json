@@ -46,6 +46,8 @@
     ]
   },
   "devDependencies": {
+    "@axe-core/react": "^4.8.5",
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@types/axios": "^0.14.0"
   }
 }

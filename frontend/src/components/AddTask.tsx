@@ -1,5 +1,17 @@
-import React, { useState } from "react";
-import { Button, Input, useToast } from "@chakra-ui/react";
+import { useState } from "react";
+import {
+  Button,
+  Input,
+  useToast,
+  Select,
+  VStack,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  HStack,
+  Heading,
+  Text,
+} from "@chakra-ui/react";
 import axios from "axios";
 
 interface AddTaskProps {
@@ -7,15 +19,31 @@ interface AddTaskProps {
 }
 
 const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
-  const [newTaskTitle, setNewTaskTitle] = useState("");
+  const [newTaskDescription, setNewTaskDescription] = useState("");
+  const [priority, setPriority] = useState("");
+  const [isPriorityInvalid, setIsPriorityInvalid] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const toast = useToast();
 
   const addTask = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitted(true);
 
-    if (!newTaskTitle.trim()) {
+    if (!newTaskDescription.trim()) {
       toast({
-        title: "Please enter a task title.",
+        title: "Please enter a task description.",
+        status: "warning",
+        duration: 2000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    if (!priority) {
+      setIsPriorityInvalid(true);
+      toast({
+        title: "Priority selection is required.",
+        description: "Please select a priority for the task.",
         status: "warning",
         duration: 2000,
         isClosable: true,
@@ -25,9 +53,13 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
 
     try {
       await axios.post("http://localhost:3005/task", {
-        title: newTaskTitle.trim(),
+        description: newTaskDescription.trim(),
+        priority,
       });
-      setNewTaskTitle("");
+      setNewTaskDescription("");
+      setPriority("");
+      setIsPriorityInvalid(false);
+      setSubmitted(false);
 
       toast({
         title: "Task added successfully.",
@@ -48,19 +80,59 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
   };
 
   return (
-    <form onSubmit={addTask}>
-      <label htmlFor="new-task-title">New Task Title</label>
-      <Input
-        id="new-task-title"
-        value={newTaskTitle}
-        onChange={(e) => setNewTaskTitle(e.target.value)}
-        placeholder="Enter a new task..."
-        mb={4}
-      />
-      <Button type="submit" colorScheme="blue">
+    <VStack
+      as="form"
+      onSubmit={addTask}
+      spacing={4}
+      align="stretch"
+      width="full"
+    >
+      <Heading size="lg" pb={4}>
         Add Task
+      </Heading>{" "}
+      <HStack spacing={4} align="flex-end">
+        <FormControl
+          isInvalid={submitted && !newTaskDescription.trim()}
+          flex={2}
+        >
+          <FormLabel htmlFor="new-task-description">
+            New Task Description
+          </FormLabel>
+          <Input
+            id="new-task-description"
+            value={newTaskDescription}
+            onChange={(e) => setNewTaskDescription(e.target.value)}
+            placeholder="Enter a new task..."
+            size="md"
+          />
+          {submitted && !newTaskDescription.trim() && (
+            <FormErrorMessage>Task description is required.</FormErrorMessage>
+          )}
+        </FormControl>
+        <FormControl isInvalid={submitted && isPriorityInvalid} flex={1}>
+          <FormLabel htmlFor="task-priority">Priority</FormLabel>
+          <Select
+            id="task-priority"
+            value={priority}
+            onChange={(e) => {
+              setIsPriorityInvalid(false);
+              setPriority(e.target.value);
+            }}
+            placeholder="Select priority"
+          >
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+          </Select>
+          {submitted && isPriorityInvalid && (
+            <FormErrorMessage>Priority selection is required.</FormErrorMessage>
+          )}
+        </FormControl>
+      </HStack>
+      <Button type="submit" bg="#0A8080" size="lg" alignSelf="flex-end">
+        <Text color="white">Add Task</Text>
       </Button>
-    </form>
+    </VStack>
   );
 };
 

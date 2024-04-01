@@ -14,8 +14,8 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Post('/task')
-  async addTask(@Body('title') title: string) {
-      return await this.appService.addTask(title);
+  async addTask(@Body() body: { description: string; priority: string }) {
+    return await this.appService.addTask(body);
   }
 
   @Get('/tasks')
