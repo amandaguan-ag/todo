@@ -91,14 +91,14 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
     >
       <Heading size="lg" pb={4}>
         Add Task
-      </Heading>{" "}
+      </Heading>
       <HStack spacing={4} align="flex-end">
         <FormControl
           isInvalid={submitted && !newTaskDescription.trim()}
           flex={2}
         >
           <FormLabel htmlFor="new-task-description">
-            New Task Description
+            New Task Description*
           </FormLabel>
           <Input
             id="new-task-description"
@@ -112,7 +112,7 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
           )}
         </FormControl>
         <FormControl isInvalid={submitted && isPriorityInvalid} flex={1}>
-          <FormLabel htmlFor="task-priority">Priority</FormLabel>
+          <FormLabel htmlFor="task-priority">Priority*</FormLabel>
           <Select
             id="task-priority"
             value={priority}
