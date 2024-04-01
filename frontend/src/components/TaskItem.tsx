@@ -6,7 +6,6 @@ import {
   Text,
   Grid,
   Box,
-  Input,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { Task } from "../types/Task";
