@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   Flex,
@@ -15,7 +15,6 @@ import AddTask from "./AddTask";
 import { Task } from "../types/Task";
 import { Legend } from "./Legend";
 
-// Assume these are your available tags
 const availableTags = ["Work", "Study", "Personal"];
 
 interface HomeProps {
@@ -32,14 +31,13 @@ const Home: React.FC<HomeProps> = ({ tasks, onTasksUpdated }) => {
     Task[]
   >([]);
 
-  // Update filteredTasks based on selectedTags
   useEffect(() => {
     const filterTasksByTags = (taskList: Task[]) =>
       selectedTags.length > 0
         ? taskList.filter((task) =>
             task.tags.some((tag) => selectedTags.includes(tag.name))
           )
-        : taskList; // Show all tasks if no tags are selected
+        : taskList; 
 
     setFilteredCompletedTasks(
       filterTasksByTags(tasks.filter((task) => task.completed))

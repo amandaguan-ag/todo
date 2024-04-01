@@ -16,7 +16,7 @@ import {
 import axios from "axios";
 import { Task } from "../types/Task";
 
-const allTags = ["Work", "Study", "Personal"];
+const allTags = ["Work", "Study", "Personal", "None"];
 
 interface EditTaskModalProps {
   isOpen: boolean;
@@ -34,7 +34,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
   const [description, setDescription] = useState(task.description);
   const [priority, setPriority] = useState(task.priority);
   const [tagNames, setTagNames] = useState<string[]>(
-    task.tags.map((tag) => tag.name)
+    task.tags.length > 0 ? task.tags.map((tag) => tag.name) : ["None"]
   );
 
   const handlePriorityChange = (event: ChangeEvent<HTMLSelectElement>) => {
@@ -46,15 +46,21 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
       event.target.selectedOptions,
       (option) => option.value
     );
-    setTagNames(selectedOptions);
+    const tagsWithoutNone = selectedOptions.filter((tag) => tag !== "None");
+    const finalTags =
+      selectedOptions.includes("None") && tagsWithoutNone.length > 0
+        ? ["None"]
+        : tagsWithoutNone;
+    setTagNames(finalTags);
   };
 
   const handleSave = async () => {
     try {
+      const tagsToSend = tagNames.includes("None") ? [] : tagNames;
       const updateTaskDto = {
         description,
         priority,
-        tagNames,
+        tagNames: tagsToSend,
       };
 
       await axios.patch(`http://localhost:3005/task/${task.id}`, updateTaskDto);
@@ -79,7 +85,6 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
               onChange={(e) => setDescription(e.target.value)}
             />
           </FormControl>
-
           <FormControl id="task-priority" mt={4} isRequired>
             <FormLabel>Priority</FormLabel>
             <Select value={priority} onChange={handlePriorityChange}>

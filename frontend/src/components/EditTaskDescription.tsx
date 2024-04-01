@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { Input, Button } from "@chakra-ui/react";
 import { Task } from "../types/Task"; // Assuming this is where you've defined your Task type
