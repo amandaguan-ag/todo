@@ -3,14 +3,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './task.entity';
 import { Tag } from './tag.entity';
 import { Repository } from 'typeorm';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 @Injectable()
 export class AppService {
   constructor(
     @InjectRepository(Task)
     private taskRepository: Repository<Task>,
-    @InjectRepository(Tag) 
-    private tagRepository: Repository<Tag>, 
+    @InjectRepository(Tag)
+    private tagRepository: Repository<Tag>,
   ) {}
 
   async addTask(taskData: {
@@ -18,24 +19,32 @@ export class AppService {
     priority: string;
     tagNames: string[];
   }) {
-    const tags = await Promise.all(
-      taskData.tagNames.map(async (name) => {
-        let tag = await this.tagRepository.findOne({ where: { name } });
-        if (!tag) {
-          tag = this.tagRepository.create({ name });
-          await this.tagRepository.save(tag);
-        }
-        return tag;
-      }),
-    );
+    try {
+      const tags = await Promise.all(
+        taskData.tagNames.map(async (name) => {
+          let tag = await this.tagRepository.findOne({ where: { name } });
+          if (!tag) {
+            tag = this.tagRepository.create({ name });
+            await this.tagRepository.save(tag);
+          }
+          return tag;
+        }),
+      );
 
-    const newTask = this.taskRepository.create({ ...taskData, tags }); 
-    await this.taskRepository.save(newTask);
-    return this.getTasks(); 
+      const newTask = this.taskRepository.create({ ...taskData, tags });
+      await this.taskRepository.save(newTask);
+      return await this.getTasks();
+    } catch (error) {
+      console.error(error); 
+      throw new HttpException(
+        error.message || 'Failed to create task',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   async getTasks() {
-    return await this.taskRepository.find();
+    return await this.taskRepository.find({ relations: ['tags'] });
   }
 
   async toggleTaskCompletion(id: number): Promise<Task> {
