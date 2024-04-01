@@ -91,7 +91,7 @@ const TaskItem: React.FC<TaskProps> = ({ task, onToggle, isHighlighted }) => {
           </Checkbox>
           <Text fontWeight="bold">{task.priority} Priority</Text>
           <Text color="#6B6666">{formatDate(task.createdAt)}</Text>
-          <Button colorScheme="red" size="sm" onClick={deleteTask}>
+          <Button bg="#C83E3E" color="white" size="sm" onClick={deleteTask}>
             Delete
           </Button>
           <Button size="sm" onClick={handleOpenEditModal}>
