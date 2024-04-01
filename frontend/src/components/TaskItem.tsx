@@ -31,7 +31,7 @@ const TaskItem: React.FC<TaskProps> = ({ task, onToggle, isHighlighted }) => {
         description: editedDescription,
       });
       setIsEditing(false);
-      onToggle(); // This should now trigger a refresh of the task list.
+      onToggle();
     } catch (error) {
       console.error("Failed to update task description:", error);
     }
@@ -92,15 +92,17 @@ const TaskItem: React.FC<TaskProps> = ({ task, onToggle, isHighlighted }) => {
         borderWidth={isHighlighted ? "2px" : "1px"}
         borderColor={isHighlighted ? "yellow.300" : "gray.200"}
       >
-        {isEditing ? (
-          <Input
-            value={editedDescription}
-            onChange={handleDescriptionChange}
-            size="sm"
-          />
-        ) : (
-          <Text>{task.description}</Text>
-        )}
+        <Checkbox isChecked={task.completed} onChange={toggleCompletion}>
+          {isEditing ? (
+            <Input
+              value={editedDescription}
+              onChange={handleDescriptionChange}
+              size="sm"
+            />
+          ) : (
+            <Text>{task.description}</Text>
+          )}
+        </Checkbox>
         <Text fontWeight="bold">{task.priority} Priority</Text>
         <Text color="#6B6666">{formatDate(task.createdAt)}</Text>
         <Button colorScheme="red" size="sm" onClick={deleteTask}>
