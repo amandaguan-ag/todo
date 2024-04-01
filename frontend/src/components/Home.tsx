@@ -10,6 +10,7 @@ import {
 import TaskList from "./TaskList";
 import AddTask from "./AddTask";
 import { Task } from "../types/Task";
+import { Legend } from "./Legend"; 
 
 interface HomeProps {
   tasks: Task[];
@@ -45,6 +46,7 @@ const Home: React.FC<HomeProps> = ({ tasks, onTasksUpdated }) => {
           Newest).
         </Text>
       </Container>
+      <Legend /> 
       <Flex
         direction={{ base: "column", md: "row" }}
         width="full"
