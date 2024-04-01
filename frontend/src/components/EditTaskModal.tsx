@@ -16,7 +16,7 @@ import {
 import axios from "axios";
 import { Task } from "../types/Task";
 
-const allTags = ["Work", "Study", "Entertainment"];
+const allTags = ["Work", "Study", "Personal"];
 
 interface EditTaskModalProps {
   isOpen: boolean;

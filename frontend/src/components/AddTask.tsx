@@ -56,7 +56,7 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
       await axios.post("http://localhost:3005/task", {
         description: newTaskDescription.trim(),
         priority,
-        tagNames: tag ? [tag] : [], 
+        tagNames: tag ? [tag] : [],
       });
       setNewTaskDescription("");
       setPriority("");
@@ -140,7 +140,7 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
           >
             <option value="Work">Work</option>
             <option value="Study">Study</option>
-            <option value="Entertainment">Entertainment</option>
+            <option value="Personal">Personal</option>
           </Select>
         </FormControl>
       </HStack>

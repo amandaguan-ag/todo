@@ -39,17 +39,17 @@ const TaskItem: React.FC<TaskProps> = ({ task, onToggle, isHighlighted }) => {
   const deleteTask = async () => {
     try {
       await axios.delete(`http://localhost:3005/task/${task.id}`);
-      onToggle(); 
+      onToggle();
     } catch (error) {
       console.error("Failed to delete task:", error);
     }
   };
-  type TagName = "Work" | "Study" | "Entertainment";
+  type TagName = "Work" | "Study" | "Personal";
 
   const tagColors: Record<TagName, string> = {
     Work: "blue",
     Study: "green",
-    Entertainment: "red",
+    Personal: "red",
   };
   function isTagName(tag: any): tag is TagName {
     return tag in tagColors;
@@ -58,7 +58,7 @@ const TaskItem: React.FC<TaskProps> = ({ task, onToggle, isHighlighted }) => {
     if (tag && isTagName(tag)) {
       return tagColors[tag];
     }
-    return "transparent"; 
+    return "transparent";
   };
 
   return (
@@ -75,7 +75,7 @@ const TaskItem: React.FC<TaskProps> = ({ task, onToggle, isHighlighted }) => {
           h="10px"
           bg={
             task.tags?.length ? getTagColor(task.tags[0].name) : "transparent"
-          } 
+          }
         />
         <Grid
           templateColumns="repeat(3, 1fr) auto auto"
