@@ -6,7 +6,7 @@ import {
   ManyToMany,
   JoinTable,
 } from 'typeorm';
-import { Tag } from './tag.entity'; 
+import { Tag } from './tag.entity';
 
 @Entity()
 export class Task {
@@ -28,4 +28,10 @@ export class Task {
   @ManyToMany(() => Tag, (tag) => tag.tasks, { cascade: true })
   @JoinTable()
   tags: Tag[];
+
+  @Column({ nullable: true })
+  recurringInterval: string; 
+
+  @Column({ type: 'date', nullable: true })
+  nextOccurrenceDate: Date; 
 }
