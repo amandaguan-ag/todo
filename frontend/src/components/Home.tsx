@@ -70,7 +70,7 @@ const Home: React.FC<HomeProps> = ({ tasks, onTasksUpdated }) => {
           How Tasks Are Sorted:
         </Text>
         <Text fontSize="sm">
-          Tasks are prioritized by{" "}
+          Tasks are prioritized by
           <Badge colorScheme="purple">Priority Level</Badge> (High to Low), then
           by <Badge colorScheme="green">Creation Date</Badge> (Oldest to
           Newest).

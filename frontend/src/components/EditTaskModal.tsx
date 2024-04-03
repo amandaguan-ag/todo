@@ -15,8 +15,13 @@ import {
 } from "@chakra-ui/react";
 import { updateTask } from "../api/tasksApi";
 import { Task } from "../types/Task";
+import { Tag } from "../types/Tag";
 
-const allTags = ["Work", "Study", "Personal", "None"];
+const allTags = [
+  { id: 1, name: "Work" },
+  { id: 2, name: "Study" },
+  { id: 3, name: "Personal" },
+];
 
 interface EditTaskModalProps {
   isOpen: boolean;
@@ -28,7 +33,7 @@ interface EditTaskModalProps {
 type Action =
   | { type: "setDescription"; payload: string }
   | { type: "setPriority"; payload: Task["priority"] }
-  | { type: "setTagNames"; payload: string[] };
+  | { type: "setTagIds"; payload: number[] };
 
 function reducer(state: Task, action: Action): Task {
   switch (action.type) {
@@ -36,11 +41,13 @@ function reducer(state: Task, action: Action): Task {
       return { ...state, description: action.payload };
     case "setPriority":
       return { ...state, priority: action.payload };
-    case "setTagNames":
+    case "setTagIds":
       return {
         ...state,
-        tags: action.payload.map((name) => ({ id: Math.random(), name })),
-      }; 
+        tags: action.payload
+          .map((id) => allTags.find((tag) => tag.id === id))
+          .filter((tag): tag is Tag => Boolean(tag)),
+      };
     default:
       return state;
   }
@@ -58,8 +65,8 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
     dispatch({ type: "setDescription", payload: task.description });
     dispatch({ type: "setPriority", payload: task.priority });
     dispatch({
-      type: "setTagNames",
-      payload: task.tags.map((tag) => tag.name),
+      type: "setTagIds",
+      payload: task.tags.map((tag) => tag.id),
     });
   }, [task]);
 
@@ -113,18 +120,18 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
             <FormLabel>Tags</FormLabel>
             <Select
               multiple
-              value={state.tags.map((tag) => tag.name)}
+              value={state.tags.map((tag) => tag.id.toString())} 
               onChange={(e: ChangeEvent<HTMLSelectElement>) => {
                 const selectedOptions = Array.from(
                   e.target.selectedOptions,
-                  (option) => option.value
+                  (option) => parseInt(option.value)
                 );
-                dispatch({ type: "setTagNames", payload: selectedOptions });
+                dispatch({ type: "setTagIds", payload: selectedOptions });
               }}
             >
               {allTags.map((tag) => (
-                <option key={tag} value={tag}>
-                  {tag}
+                <option key={tag.id} value={tag.id.toString()}>
+                  {tag.name}
                 </option>
               ))}
             </Select>
