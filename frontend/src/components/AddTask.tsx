@@ -19,17 +19,28 @@ interface AddTaskProps {
 }
 
 const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
-  const [newTaskDescription, setNewTaskDescription] = useState("");
-  const [priority, setPriority] = useState("");
-  const [isPriorityInvalid, setIsPriorityInvalid] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [tag, setTag] = useState("");
+  const [formState, setFormState] = useState({
+    newTaskDescription: "",
+    priority: "",
+    tag: "",
+    submitted: false,
+  });
   const toast = useToast();
+
+  const handleInputChange = (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target as HTMLInputElement | HTMLSelectElement; // Correctly typecasting the target
+    setFormState((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleAddTask = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setFormState((prev) => ({ ...prev, submitted: true }));
 
+    const { newTaskDescription, priority, tag } = formState;
     if (!newTaskDescription.trim() || !priority) {
       toast({
         title: "Validation Error",
@@ -47,11 +58,12 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
         priority,
         tagNames: tag ? [tag] : [],
       });
-      setNewTaskDescription("");
-      setPriority("");
-      setTag("");
-      setIsPriorityInvalid(false);
-      setSubmitted(false);
+      setFormState({
+        newTaskDescription: "",
+        priority: "",
+        tag: "",
+        submitted: false,
+      });
       toast({
         title: "Task added successfully.",
         status: "success",
@@ -70,6 +82,8 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
       });
     }
   };
+
+  const { newTaskDescription, priority, tag, submitted } = formState;
 
   return (
     <VStack
@@ -92,8 +106,9 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
           </FormLabel>
           <Input
             id="new-task-description"
+            name="newTaskDescription"
             value={newTaskDescription}
-            onChange={(e) => setNewTaskDescription(e.target.value)}
+            onChange={handleInputChange}
             placeholder="Enter a new task..."
             size="md"
           />
@@ -101,22 +116,20 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
             <FormErrorMessage>Task description is required.</FormErrorMessage>
           )}
         </FormControl>
-        <FormControl isInvalid={submitted && isPriorityInvalid} flex={1}>
+        <FormControl isInvalid={submitted && !priority} flex={1}>
           <FormLabel htmlFor="task-priority">Priority*</FormLabel>
           <Select
             id="task-priority"
+            name="priority"
             value={priority}
-            onChange={(e) => {
-              setIsPriorityInvalid(false);
-              setPriority(e.target.value);
-            }}
+            onChange={handleInputChange}
             placeholder="Select priority"
           >
             <option value="High">High</option>
             <option value="Medium">Medium</option>
             <option value="Low">Low</option>
           </Select>
-          {submitted && isPriorityInvalid && (
+          {submitted && !priority && (
             <FormErrorMessage>Priority selection is required.</FormErrorMessage>
           )}
         </FormControl>
@@ -124,8 +137,9 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
           <FormLabel htmlFor="task-tag">Tag</FormLabel>
           <Select
             id="task-tag"
+            name="tag"
             value={tag}
-            onChange={(e) => setTag(e.target.value)}
+            onChange={handleInputChange}
             placeholder="Select tag"
           >
             <option value="Work">Work</option>
