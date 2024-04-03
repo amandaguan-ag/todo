@@ -1,10 +1,8 @@
 import { useState } from "react";
-import axios from "axios";
 import { Input, Button } from "@chakra-ui/react";
 import { Task } from "../types/Task"; 
 import { updateTaskDescription } from "../api/tasksApi";
 
-// Define the props that EditTaskDescription expects
 interface EditTaskDescriptionProps {
   task: Task;
 }
@@ -23,7 +21,6 @@ const EditTaskDescription: React.FC<EditTaskDescriptionProps> = ({ task }) => {
       await updateTaskDescription(task.id, newDescription);
     } catch (error) {
       console.error("Failed to update task description:", error);
-      // Handle error, possibly with a user notification
     }
   };
 
