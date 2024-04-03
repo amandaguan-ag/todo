@@ -8,10 +8,14 @@ import {
   Delete,
 } from '@nestjs/common';
 import { AppService } from './app.service';
+import { NotificationService } from './notification.service'; 
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly appService: AppService,
+    private readonly notificationService: NotificationService,
+  ) {}
 
   @Post('/task')
   async addTask(
@@ -20,7 +24,7 @@ export class AppController {
       description: string;
       priority: string;
       tagNames: string[];
-      userEmail: string; 
+      userEmail: string;
     },
   ) {
     return await this.appService.addTask(body);
@@ -35,6 +39,7 @@ export class AppController {
   async toggleTaskCompletion(@Param('id') id: string) {
     return await this.appService.toggleTaskCompletion(+id);
   }
+
   @Patch('/task/:id')
   async updateTask(
     @Param('id') id: string,
@@ -52,6 +57,7 @@ export class AppController {
   async deleteTask(@Param('id') id: string) {
     return await this.appService.deleteTask(+id);
   }
+
   @Patch('/task/:id/recurring')
   async setTaskRecurring(
     @Param('id') id: string,
@@ -63,5 +69,11 @@ export class AppController {
   @Get('/task/reminders')
   getTaskReminders() {
     return this.appService.getTaskReminders();
+  }
+
+  @Get('/send-test-email')
+  async sendTestEmail() {
+    await this.notificationService.sendTestEmail();
+    return { message: 'Test email sent' };
   }
 }

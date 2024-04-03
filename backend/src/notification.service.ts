@@ -14,20 +14,36 @@ export class NotificationService {
 
   private async sendEmailNotification(task: Task): Promise<void> {
     const transporter = nodemailer.createTransport({
-      host: 'smtp.ethereal.email',
-      port: 587,
+      service: 'gmail',
       auth: {
-        user: 'user@example.com',
-        pass: 'password',
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
       },
     });
 
     await transporter.sendMail({
       from: '"Task Reminder" <your-email@example.com>',
-      to: task.userEmail, 
+      to: task.userEmail,
       subject: 'Upcoming Task Reminder',
       text: `Don't forget your upcoming task: ${task.description}`,
     });
+  }
+
+  public async sendTestEmail(): Promise<void> {
+    // const task = await this.taskRepository.findOne({
+    //   where: {
+    //     /* some condition */
+    //   },
+    // });
+    // if (task) {
+    //   await this.sendEmailNotification(task);
+    // }
+
+    const testTask = {
+      userEmail: 'amandaguan1314@example.com', 
+      description: 'This is a test task',
+    } as Task; 
+    await this.sendEmailNotification(testTask);
   }
 
   @Cron(CronExpression.EVERY_HOUR)
