@@ -52,9 +52,43 @@ export class AppService {
     if (!task) {
       throw new Error(`Task with ID ${id} not found.`);
     }
+
     task.completed = !task.completed;
+
+    if (task.recurringInterval && task.completed) {
+      task.nextOccurrenceDate = this.calculateNextOccurrence(
+        task.recurringInterval,
+        task.nextOccurrenceDate,
+      );
+      task.completed = false;
+    }
+
     await this.taskRepository.save(task);
     return task;
+  }
+
+  private calculateNextOccurrence(
+    recurringInterval: string,
+    currentNextOccurrenceDate: Date,
+  ): Date {
+    const currentDate = new Date(currentNextOccurrenceDate);
+    switch (recurringInterval) {
+      case 'Daily':
+        currentDate.setDate(currentDate.getDate() + 1);
+        break;
+      case 'Weekly':
+        currentDate.setDate(currentDate.getDate() + 7);
+        break;
+      case 'Bi-Weekly':
+        currentDate.setDate(currentDate.getDate() + 14);
+        break;
+      case 'Monthly':
+        currentDate.setMonth(currentDate.getMonth() + 1);
+        break;
+      default:
+        throw new Error(`Unsupported recurring interval: ${recurringInterval}`);
+    }
+    return currentDate;
   }
 
   async updateTask(
