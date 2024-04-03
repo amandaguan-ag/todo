@@ -14,7 +14,10 @@ export class NotificationService {
 
   private async sendEmailNotification(task: Task): Promise<void> {
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      service: 'Gmail',
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
@@ -30,19 +33,11 @@ export class NotificationService {
   }
 
   public async sendTestEmail(): Promise<void> {
-    // const task = await this.taskRepository.findOne({
-    //   where: {
-    //     /* some condition */
-    //   },
-    // });
-    // if (task) {
-    //   await this.sendEmailNotification(task);
-    // }
 
     const testTask = {
-      userEmail: 'amandaguan1314@example.com', 
+      userEmail: 'amandaguan1314@gmail.com',
       description: 'This is a test task',
-    } as Task; 
+    } as Task;
     await this.sendEmailNotification(testTask);
   }
 
