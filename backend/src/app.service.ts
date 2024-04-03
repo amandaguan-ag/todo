@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './task.entity';
 import { Tag } from './tag.entity';
-import { Repository } from 'typeorm';
+import { Repository, LessThanOrEqual } from 'typeorm'; // Added LessThanOrEqual here
 import { HttpException, HttpStatus } from '@nestjs/common';
 
 @Injectable()
@@ -103,5 +103,37 @@ export class AppService {
     if (result.affected === 0) {
       throw new Error(`Task with ID ${id} not found.`);
     }
+  }
+
+  async setTaskRecurring(
+    id: number,
+    recurringData: {
+      recurringInterval: string;
+      nextOccurrenceDate: Date;
+    },
+  ): Promise<Task> {
+    const task = await this.taskRepository.findOne({ where: { id } });
+    if (!task) {
+      throw new HttpException(
+        `Task with ID ${id} not found.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    task.recurringInterval = recurringData.recurringInterval;
+    task.nextOccurrenceDate = recurringData.nextOccurrenceDate;
+
+    await this.taskRepository.save(task);
+    return task;
+  }
+
+  async getTaskReminders(): Promise<Task[]> {
+    const today = new Date();
+    return await this.taskRepository.find({
+      where: {
+        nextOccurrenceDate: LessThanOrEqual(today),
+        completed: false,
+      },
+    });
   }
 }

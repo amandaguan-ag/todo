@@ -46,4 +46,16 @@ export class AppController {
   async deleteTask(@Param('id') id: string) {
     return await this.appService.deleteTask(+id);
   }
+  @Patch('/task/:id/recurring')
+  async setTaskRecurring(
+    @Param('id') id: string,
+    @Body() body: { recurringInterval: string; nextOccurrenceDate: Date },
+  ) {
+    return await this.appService.setTaskRecurring(+id, body);
+  }
+
+  @Get('/task/reminders')
+  getTaskReminders() {
+    return this.appService.getTaskReminders();
+  }
 }
