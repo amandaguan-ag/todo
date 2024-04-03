@@ -15,7 +15,13 @@ export class AppController {
 
   @Post('/task')
   async addTask(
-    @Body() body: { description: string; priority: string; tagNames: string[] },
+    @Body()
+    body: {
+      description: string;
+      priority: string;
+      tagNames: string[];
+      userEmail: string; 
+    },
   ) {
     return await this.appService.addTask(body);
   }

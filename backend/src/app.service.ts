@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './task.entity';
 import { Tag } from './tag.entity';
-import { Repository, LessThanOrEqual } from 'typeorm'; 
+import { Repository, LessThanOrEqual } from 'typeorm';
 import { HttpException, HttpStatus } from '@nestjs/common';
 
 @Injectable()
@@ -18,6 +18,7 @@ export class AppService {
     description: string;
     priority: string;
     tagNames: string[];
+    userEmail: string; 
   }) {
     try {
       const tags = await Promise.all(
@@ -31,7 +32,7 @@ export class AppService {
         }),
       );
 
-      const newTask = this.taskRepository.create({ ...taskData, tags });
+      const newTask = this.taskRepository.create(taskData); 
       await this.taskRepository.save(newTask);
       return await this.getTasks();
     } catch (error) {

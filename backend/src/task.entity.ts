@@ -34,7 +34,7 @@ export class Task {
 
   @Column({ type: 'date', nullable: true })
   nextOccurrenceDate: Date;
-  
+
   @Column({ nullable: true })
-  userEmail: string; 
+  userEmail: string;
 }

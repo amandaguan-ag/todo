@@ -3,13 +3,13 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 import { Task } from './task.entity';
 import * as nodemailer from 'nodemailer';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, LessThanOrEqual } from 'typeorm'; 
+import { Repository, LessThanOrEqual } from 'typeorm';
 
 @Injectable()
 export class NotificationService {
   constructor(
     @InjectRepository(Task)
-    private taskRepository: Repository<Task>, 
+    private taskRepository: Repository<Task>,
   ) {}
 
   private async sendEmailNotification(task: Task): Promise<void> {
