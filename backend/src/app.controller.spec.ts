@@ -37,7 +37,10 @@ describe('AppController', () => {
     const newTaskData = {
       description: 'New Task',
       priority: 'Medium',
+      tagNames: [], 
+      userEmail: 'user@example.com', 
     };
+
     await appController.addTask(newTaskData);
     expect(appService.addTask).toHaveBeenCalledWith(newTaskData);
   });
@@ -53,7 +56,7 @@ describe('AppController', () => {
 
   it('should toggle task completion successfully', async () => {
     const taskId = 1;
-    const mockTask = { id: taskId, description: 'Test Task', completed: false }; // Changed title to description
+    const mockTask = { id: taskId, description: 'Test Task', completed: false };
     appService.toggleTaskCompletion.mockResolvedValue({
       ...mockTask,
       completed: !mockTask.completed,
