@@ -55,7 +55,7 @@ export class NotificationService {
     }
   }
 
-  @Cron(CronExpression.EVERY_HOUR)
+  @Cron('0 16 * * *')
   async handleCron() {
     const tasks = await this.taskRepository.find({
       where: {
