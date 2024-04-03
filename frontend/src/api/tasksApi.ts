@@ -20,14 +20,24 @@ const makeApiRequest = async (
     const options = {
       method,
       url,
-      ...(payload && { data: payload }), 
+      ...(payload && { data: payload }),
     };
     const response = await axios(options);
     return response.data;
   } catch (error) {
-    console.error("API request failed:", error);
-    throw error;
+    handleError(error);
   }
+};
+
+const handleError = (error: any) => {
+  if (axios.isAxiosError(error)) {
+    console.error(
+      `API Error: ${error.response?.status} - ${error.response?.data}`
+    );
+  } else {
+    console.error("Non-API error:", error);
+  }
+  throw error;
 };
 
 export const fetchTasks = () => makeApiRequest("/tasks", "GET");
