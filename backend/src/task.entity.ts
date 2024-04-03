@@ -30,8 +30,11 @@ export class Task {
   tags: Tag[];
 
   @Column({ nullable: true })
-  recurringInterval: string; 
+  recurringInterval: string;
 
   @Column({ type: 'date', nullable: true })
-  nextOccurrenceDate: Date; 
+  nextOccurrenceDate: Date;
+  
+  @Column({ nullable: true })
+  userEmail: string; 
 }
