@@ -18,8 +18,10 @@ export class AppService {
     description: string;
     priority: string;
     tagNames: string[];
-    userEmail: string; 
-  }) {
+    userEmail: string;
+    isRecurring?: boolean;
+    recurringInterval?: string;
+  }): Promise<Task> {
     try {
       const tags = await Promise.all(
         taskData.tagNames.map(async (name) => {
@@ -32,9 +34,21 @@ export class AppService {
         }),
       );
 
-      const newTask = this.taskRepository.create(taskData); 
+      let nextOccurrenceDate = null;
+      if (taskData.isRecurring && taskData.recurringInterval) {
+        nextOccurrenceDate = this.calculateNextOccurrence(
+          taskData.recurringInterval,
+          new Date(),
+        );
+      }
+
+      const newTask = this.taskRepository.create({
+        ...taskData,
+        nextOccurrenceDate,
+      });
+
       await this.taskRepository.save(newTask);
-      return await this.getTasks();
+      return newTask;
     } catch (error) {
       console.error(error);
       throw new HttpException(
