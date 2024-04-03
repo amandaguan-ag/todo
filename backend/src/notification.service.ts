@@ -33,12 +33,16 @@ export class NotificationService {
   }
 
   public async sendTestEmail(): Promise<void> {
+    const task = await this.taskRepository.findOne({
+      where: { completed: false },
+      order: { createdAt: 'DESC' }, 
+    });
 
-    const testTask = {
-      userEmail: 'amandaguan1314@gmail.com',
-      description: 'This is a test task',
-    } as Task;
-    await this.sendEmailNotification(testTask);
+    if (!task) {
+      throw new Error('No task available for sending test email.');
+    }
+
+    await this.sendEmailNotification(task);
   }
 
   @Cron(CronExpression.EVERY_HOUR)
