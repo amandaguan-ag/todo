@@ -15,7 +15,7 @@ import { sortTasks } from "./utils/taskUtils";
 
 const App: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [userDetailsEntered, setUserDetailsEntered] = useState(false); 
+  const [userDetailsEntered, setUserDetailsEntered] = useState(false);
   const [userName, setUserName] = useState("");
   const [userEmail, setUserEmail] = useState("");
 
@@ -78,7 +78,11 @@ const App: React.FC = () => {
   return (
     <ChakraProvider>
       <Box m={10} as="main">
-        <Home tasks={tasks} onTasksUpdated={handleRefreshTasks} />
+        <Home
+          tasks={tasks}
+          onTasksUpdated={handleRefreshTasks}
+          userEmail={userEmail}
+        />
       </Box>
     </ChakraProvider>
   );

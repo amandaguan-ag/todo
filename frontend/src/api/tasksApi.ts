@@ -6,10 +6,10 @@ interface TaskData {
   description: string;
   priority: string;
   tagNames: string[];
-  isRecurring?: boolean; 
+  userEmail: string; 
+  isRecurring?: boolean;
   recurringInterval?: string;
 }
-
 
 type HttpMethod = "GET" | "POST" | "PATCH" | "DELETE";
 

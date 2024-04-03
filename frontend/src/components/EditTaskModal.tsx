@@ -70,19 +70,20 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
     });
   }, [task]);
 
-  const handleSave = async () => {
-    try {
-      await updateTask(task.id, {
-        description: state.description,
-        priority: state.priority,
-        tagNames: state.tags.map((tag) => tag.name),
-      });
-      onUpdate();
-      onClose();
-    } catch (error) {
-      console.error("Failed to update task:", error);
-    }
-  };
+const handleSave = async () => {
+  try {
+    await updateTask(task.id, {
+      description: state.description,
+      priority: state.priority,
+      tagNames: state.tags.map((tag) => tag.name),
+      userEmail: "your_user_email@example.com", 
+    });
+    onUpdate();
+    onClose();
+  } catch (error) {
+    console.error("Failed to update task:", error);
+  }
+};
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>

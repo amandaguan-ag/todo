@@ -16,9 +16,10 @@ import { addTask } from "../api/tasksApi";
 
 interface AddTaskProps {
   onTasksUpdated: () => void;
+  userEmail: string;
 }
 
-const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
+const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated, userEmail }) => {
   const [formState, setFormState] = useState({
     newTaskDescription: "",
     priority: "",
@@ -34,7 +35,7 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
       | React.ChangeEvent<HTMLInputElement>
       | React.ChangeEvent<HTMLSelectElement>
   ) => {
-    const target = e.target as HTMLInputElement; // Assume all inputs including select are covered by this type
+    const target = e.target as HTMLInputElement; 
     const value = target.type === "checkbox" ? target.checked : target.value;
     setFormState((prev) => ({
       ...prev,
@@ -53,6 +54,9 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
       isRecurring,
       recurringInterval,
     } = formState;
+
+    const tagNames = tag ? [tag] : [];
+
     if (!newTaskDescription.trim() || !priority) {
       toast({
         title: "Validation Error",
@@ -69,10 +73,12 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
       await addTask({
         description: newTaskDescription.trim(),
         priority,
-        tagNames: tag ? [tag] : [],
+        tagNames,
+        userEmail,
         isRecurring,
         recurringInterval: isRecurring ? recurringInterval : undefined,
       });
+
       setFormState({
         newTaskDescription: "",
         priority: "",
