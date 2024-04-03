@@ -8,7 +8,7 @@ import {
   Delete,
 } from '@nestjs/common';
 import { AppService } from './app.service';
-import { NotificationService } from './notification.service'; 
+import { NotificationService } from './notification.service';
 
 @Controller()
 export class AppController {
@@ -75,5 +75,10 @@ export class AppController {
   async sendTestEmail() {
     await this.notificationService.sendTestEmail();
     return { message: 'Test email sent' };
+  }
+  @Get('/send-email-now/:taskId')
+  async sendEmailNow(@Param('taskId') taskId: number) {
+    await this.notificationService.sendEmailNow(taskId);
+    return { message: 'Email sent' };
   }
 }

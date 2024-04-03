@@ -35,7 +35,7 @@ export class NotificationService {
   public async sendTestEmail(): Promise<void> {
     const task = await this.taskRepository.findOne({
       where: { completed: false },
-      order: { createdAt: 'DESC' }, 
+      order: { createdAt: 'DESC' },
     });
 
     if (!task) {
@@ -43,6 +43,16 @@ export class NotificationService {
     }
 
     await this.sendEmailNotification(task);
+  }
+
+  public async sendEmailNow(taskId: number): Promise<void> {
+    const task = await this.taskRepository.findOne({ where: { id: taskId } });
+
+    if (task) {
+      await this.sendEmailNotification(task);
+    } else {
+      throw new Error(`Task with ID ${taskId} not found.`);
+    }
   }
 
   @Cron(CronExpression.EVERY_HOUR)
