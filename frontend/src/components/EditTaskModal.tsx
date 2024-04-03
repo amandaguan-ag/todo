@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from "react";
+import { useReducer, ChangeEvent, useEffect } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -25,45 +25,51 @@ interface EditTaskModalProps {
   onUpdate: () => void;
 }
 
+type Action =
+  | { type: "setDescription"; payload: string }
+  | { type: "setPriority"; payload: Task["priority"] }
+  | { type: "setTagNames"; payload: string[] };
+
+function reducer(state: Task, action: Action): Task {
+  switch (action.type) {
+    case "setDescription":
+      return { ...state, description: action.payload };
+    case "setPriority":
+      return { ...state, priority: action.payload };
+    case "setTagNames":
+      return {
+        ...state,
+        tags: action.payload.map((name) => ({ id: Math.random(), name })),
+      }; 
+    default:
+      return state;
+  }
+}
+
 const EditTaskModal: React.FC<EditTaskModalProps> = ({
   isOpen,
   onClose,
   task,
   onUpdate,
 }) => {
-  const [description, setDescription] = useState(task.description);
-  const [priority, setPriority] = useState(task.priority);
-  const [tagNames, setTagNames] = useState<string[]>(
-    task.tags.length > 0 ? task.tags.map((tag) => tag.name) : ["None"]
-  );
+  const [state, dispatch] = useReducer(reducer, task);
 
-  const handlePriorityChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setPriority(event.target.value as typeof priority);
-  };
-
-  const handleTagsChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    const selectedOptions = Array.from(
-      event.target.selectedOptions,
-      (option) => option.value
-    );
-    const tagsWithoutNone = selectedOptions.filter((tag) => tag !== "None");
-    const finalTags =
-      selectedOptions.includes("None") && tagsWithoutNone.length > 0
-        ? ["None"]
-        : tagsWithoutNone;
-    setTagNames(finalTags);
-  };
+  useEffect(() => {
+    dispatch({ type: "setDescription", payload: task.description });
+    dispatch({ type: "setPriority", payload: task.priority });
+    dispatch({
+      type: "setTagNames",
+      payload: task.tags.map((tag) => tag.name),
+    });
+  }, [task]);
 
   const handleSave = async () => {
     try {
-      const tagsToSend = tagNames.includes("None") ? [] : tagNames;
-      const updateTaskDto = {
-        description,
-        priority,
-        tagNames: tagsToSend,
-      };
-
-      await updateTask(task.id, updateTaskDto);
+      await updateTask(task.id, {
+        description: state.description,
+        priority: state.priority,
+        tagNames: state.tags.map((tag) => tag.name),
+      });
       onUpdate();
       onClose();
     } catch (error) {
@@ -81,13 +87,23 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
           <FormControl id="task-description" isRequired>
             <FormLabel>Description</FormLabel>
             <Input
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              value={state.description}
+              onChange={(e) =>
+                dispatch({ type: "setDescription", payload: e.target.value })
+              }
             />
           </FormControl>
           <FormControl id="task-priority" mt={4} isRequired>
             <FormLabel>Priority</FormLabel>
-            <Select value={priority} onChange={handlePriorityChange}>
+            <Select
+              value={state.priority}
+              onChange={(e) =>
+                dispatch({
+                  type: "setPriority",
+                  payload: e.target.value as Task["priority"],
+                })
+              }
+            >
               <option value="High">High</option>
               <option value="Medium">Medium</option>
               <option value="Low">Low</option>
@@ -95,7 +111,17 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
           </FormControl>
           <FormControl id="task-tags" mt={4}>
             <FormLabel>Tags</FormLabel>
-            <Select multiple value={tagNames} onChange={handleTagsChange}>
+            <Select
+              multiple
+              value={state.tags.map((tag) => tag.name)}
+              onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+                const selectedOptions = Array.from(
+                  e.target.selectedOptions,
+                  (option) => option.value
+                );
+                dispatch({ type: "setTagNames", payload: selectedOptions });
+              }}
+            >
               {allTags.map((tag) => (
                 <option key={tag} value={tag}>
                   {tag}
