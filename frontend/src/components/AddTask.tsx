@@ -124,9 +124,10 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
         <FormControl
           isInvalid={submitted && !newTaskDescription.trim()}
           flex={2}
+          isRequired
         >
           <FormLabel htmlFor="new-task-description">
-            New Task Description*
+            New Task Description
           </FormLabel>
           <Input
             id="new-task-description"
@@ -140,8 +141,8 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
             <FormErrorMessage>Task description is required.</FormErrorMessage>
           )}
         </FormControl>
-        <FormControl isInvalid={submitted && !priority} flex={1}>
-          <FormLabel htmlFor="task-priority">Priority*</FormLabel>
+        <FormControl isInvalid={submitted && !priority} flex={1} isRequired>
+          <FormLabel htmlFor="task-priority">Priority</FormLabel>
           <Select
             id="task-priority"
             name="priority"
