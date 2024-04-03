@@ -8,37 +8,41 @@ interface TaskData {
   tagNames?: string[];
 }
 
-export const fetchTasks = async () => {
-  const response = await axios.get(`${BASE_URL}/tasks`);
-  return response.data;
-};
+type HttpMethod = "GET" | "POST" | "PATCH" | "DELETE";
 
-export const addTask = async (taskData: TaskData) => {
-  const response = await axios.post(`${BASE_URL}/task`, taskData);
-  return response.data;
-};
-
-export const updateTaskDescription = async (
-  taskId: number,
-  description: string
+const makeApiRequest = async (
+  endpoint: string,
+  method: HttpMethod,
+  payload: object | null = null
 ) => {
-  const response = await axios.patch(`${BASE_URL}/task/${taskId}/description`, {
-    description,
-  });
-  return response.data;
+  try {
+    const url = `${BASE_URL}${endpoint}`;
+    const options = {
+      method,
+      url,
+      ...(payload && { data: payload }), 
+    };
+    const response = await axios(options);
+    return response.data;
+  } catch (error) {
+    console.error("API request failed:", error);
+    throw error;
+  }
 };
 
-export const updateTask = async (taskId: number, taskData: TaskData) => {
-  const response = await axios.patch(`${BASE_URL}/task/${taskId}`, taskData);
-  return response.data;
-};
+export const fetchTasks = () => makeApiRequest("/tasks", "GET");
 
-export const toggleTaskCompletion = async (taskId: number) => {
-  const response = await axios.patch(`${BASE_URL}/task/${taskId}/completion`);
-  return response.data;
-};
+export const addTask = (taskData: TaskData) =>
+  makeApiRequest("/task", "POST", taskData);
 
-export const deleteTask = async (taskId: number) => {
-  const response = await axios.delete(`${BASE_URL}/task/${taskId}`);
-  return response.data;
-};
+export const updateTaskDescription = (taskId: number, description: string) =>
+  makeApiRequest(`/task/${taskId}/description`, "PATCH", { description });
+
+export const updateTask = (taskId: number, taskData: TaskData) =>
+  makeApiRequest(`/task/${taskId}`, "PATCH", taskData);
+
+export const toggleTaskCompletion = (taskId: number) =>
+  makeApiRequest(`/task/${taskId}/completion`, "PATCH");
+
+export const deleteTask = (taskId: number) =>
+  makeApiRequest(`/task/${taskId}`, "DELETE");
