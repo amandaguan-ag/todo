@@ -13,7 +13,7 @@ import {
   Input,
   Select,
 } from "@chakra-ui/react";
-import axios from "axios";
+import { updateTask } from "../api/tasksApi";
 import { Task } from "../types/Task";
 
 const allTags = ["Work", "Study", "Personal", "None"];
@@ -63,7 +63,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
         tagNames: tagsToSend,
       };
 
-      await axios.patch(`http://localhost:3005/task/${task.id}`, updateTaskDto);
+      await updateTask(task.id, updateTaskDto);
       onUpdate();
       onClose();
     } catch (error) {

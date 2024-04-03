@@ -2,8 +2,8 @@ import axios from "axios";
 
 interface TaskData {
   description: string;
-  priority: string; 
-  tagNames?: string[]; 
+  priority: string;
+  tagNames?: string[];
 }
 
 const BASE_URL = "http://localhost:3005";
@@ -16,12 +16,12 @@ interface TaskData {
 
 export const fetchTasks = async () => {
   const response = await axios.get(`${BASE_URL}/tasks`);
-  return response.data; 
+  return response.data;
 };
 
 export const addTask = async (taskData: TaskData) => {
   const response = await axios.post(`${BASE_URL}/task`, taskData);
-  return response.data; 
+  return response.data;
 };
 
 export const updateTaskDescription = async (
@@ -31,6 +31,11 @@ export const updateTaskDescription = async (
   const response = await axios.patch(`${BASE_URL}/task/${taskId}/description`, {
     description,
   });
+  return response.data;
+};
+
+export const updateTask = async (taskId: number, taskData: TaskData) => {
+  const response = await axios.patch(`${BASE_URL}/task/${taskId}`, taskData);
   return response.data;
 };
 
