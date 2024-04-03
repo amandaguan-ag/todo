@@ -5,8 +5,11 @@ const BASE_URL = "http://localhost:3005";
 interface TaskData {
   description: string;
   priority: string;
-  tagNames?: string[];
+  tagNames: string[];
+  isRecurring?: boolean; 
+  recurringInterval?: string;
 }
+
 
 type HttpMethod = "GET" | "POST" | "PATCH" | "DELETE";
 
