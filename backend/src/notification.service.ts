@@ -62,10 +62,53 @@ export class NotificationService {
         nextOccurrenceDate: LessThanOrEqual(new Date()),
         completed: false,
       },
+      order: {
+        createdAt: 'ASC',
+      },
     });
 
-    tasks.forEach((task) => {
-      this.sendEmailNotification(task);
+    const tasksByEmail = tasks.reduce(
+      (acc: { [key: string]: Task[] }, task) => {
+        if (task.userEmail) {
+          if (!acc[task.userEmail]) {
+            acc[task.userEmail] = [];
+          }
+          acc[task.userEmail].push(task);
+        }
+        return acc;
+      },
+      {},
+    );
+
+    for (const [email, tasks] of Object.entries(tasksByEmail)) {
+      const taskDescriptions = tasks
+        .map((task: Task) => `- ${task.description}`) 
+        .join('\n');
+      const emailBody = `You have the following tasks due:\n\n${taskDescriptions}`;
+      await this.sendCombinedEmailNotification(email, emailBody);
+    }
+  }
+
+  private async sendCombinedEmailNotification(
+    email: string,
+    emailBody: string,
+  ): Promise<void> {
+    const transporter = nodemailer.createTransport({
+      service: 'Gmail',
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    await transporter.sendMail({
+      from: '"Task Reminder" <your-email@example.com>',
+      to: email,
+      subject: 'Upcoming Task Reminders',
+      text: emailBody,
     });
   }
 }
