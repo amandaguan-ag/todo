@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
   Box,
   Flex,
@@ -6,10 +7,15 @@ import {
   Text,
   Badge,
   Container,
+  Stack,
+  Checkbox,
 } from "@chakra-ui/react";
 import TaskList from "./TaskList";
 import AddTask from "./AddTask";
 import { Task } from "../types/Task";
+import { Legend } from "./Legend";
+
+const availableTags = ["Work", "Study", "Personal"];
 
 interface HomeProps {
   tasks: Task[];
@@ -17,8 +23,35 @@ interface HomeProps {
 }
 
 const Home: React.FC<HomeProps> = ({ tasks, onTasksUpdated }) => {
-  const completedTasks = tasks.filter((task) => task.completed);
-  const notCompletedTasks = tasks.filter((task) => !task.completed);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [filteredCompletedTasks, setFilteredCompletedTasks] = useState<Task[]>(
+    []
+  );
+  const [filteredNotCompletedTasks, setFilteredNotCompletedTasks] = useState<
+    Task[]
+  >([]);
+
+  useEffect(() => {
+    const filterTasksByTags = (taskList: Task[]) =>
+      selectedTags.length > 0
+        ? taskList.filter((task) =>
+            task.tags.some((tag) => selectedTags.includes(tag.name))
+          )
+        : taskList; 
+
+    setFilteredCompletedTasks(
+      filterTasksByTags(tasks.filter((task) => task.completed))
+    );
+    setFilteredNotCompletedTasks(
+      filterTasksByTags(tasks.filter((task) => !task.completed))
+    );
+  }, [tasks, selectedTags]);
+
+  const handleTagChange = (tag: string, isChecked: boolean) => {
+    setSelectedTags((prev) =>
+      isChecked ? [...prev, tag] : prev.filter((t) => t !== tag)
+    );
+  };
 
   return (
     <VStack spacing={8} align="stretch">
@@ -32,19 +65,29 @@ const Home: React.FC<HomeProps> = ({ tasks, onTasksUpdated }) => {
         bg="gray.100"
         borderRadius="md"
         boxShadow="xl"
-        maxW="80%"
-        width="auto"
       >
         <Text fontSize="md" fontWeight="bold">
           How Tasks Are Sorted:
         </Text>
         <Text fontSize="sm">
-          Tasks are prioritized by{" "}
+          Tasks are prioritized by
           <Badge colorScheme="purple">Priority Level</Badge> (High to Low), then
           by <Badge colorScheme="green">Creation Date</Badge> (Oldest to
           Newest).
         </Text>
       </Container>
+      <Legend />
+      <Stack direction="row">
+        {availableTags.map((tag) => (
+          <Checkbox
+            key={tag}
+            isChecked={selectedTags.includes(tag)}
+            onChange={(e) => handleTagChange(tag, e.target.checked)}
+          >
+            {tag}
+          </Checkbox>
+        ))}
+      </Stack>
       <Flex
         direction={{ base: "column", md: "row" }}
         width="full"
@@ -63,8 +106,8 @@ const Home: React.FC<HomeProps> = ({ tasks, onTasksUpdated }) => {
             Todo
           </Heading>
           <TaskList
+            tasks={filteredNotCompletedTasks}
             onTasksUpdated={onTasksUpdated}
-            tasks={notCompletedTasks}
             isTodoSection={true}
           />
         </Box>
@@ -81,8 +124,8 @@ const Home: React.FC<HomeProps> = ({ tasks, onTasksUpdated }) => {
             Done
           </Heading>
           <TaskList
+            tasks={filteredCompletedTasks}
             onTasksUpdated={onTasksUpdated}
-            tasks={completedTasks}
             isTodoSection={false}
           />
         </Box>

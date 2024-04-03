@@ -14,7 +14,9 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Post('/task')
-  async addTask(@Body() body: { description: string; priority: string }) {
+  async addTask(
+    @Body() body: { description: string; priority: string; tagNames: string[] },
+  ) {
     return await this.appService.addTask(body);
   }
 
@@ -26,6 +28,18 @@ export class AppController {
   @Patch('/task/:id/completion')
   async toggleTaskCompletion(@Param('id') id: string) {
     return await this.appService.toggleTaskCompletion(+id);
+  }
+  @Patch('/task/:id')
+  async updateTask(
+    @Param('id') id: string,
+    @Body()
+    updateTaskDto: {
+      description?: string;
+      priority?: string;
+      tagNames?: string[];
+    },
+  ) {
+    return await this.appService.updateTask(+id, updateTaskDto);
   }
 
   @Delete('/task/:id')

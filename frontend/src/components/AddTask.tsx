@@ -12,38 +12,39 @@ import {
   Heading,
   Text,
 } from "@chakra-ui/react";
-import axios from "axios";
+import { addTask } from "../api/tasksApi";
 
 interface AddTaskProps {
   onTasksUpdated: () => void;
 }
 
 const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
-  const [newTaskDescription, setNewTaskDescription] = useState("");
-  const [priority, setPriority] = useState("");
-  const [isPriorityInvalid, setIsPriorityInvalid] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [formState, setFormState] = useState({
+    newTaskDescription: "",
+    priority: "",
+    tag: "",
+    submitted: false,
+  });
   const toast = useToast();
 
-  const addTask = async (e: React.FormEvent) => {
+  const handleInputChange = (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target as HTMLInputElement | HTMLSelectElement; // Correctly typecasting the target
+    setFormState((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleAddTask = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setFormState((prev) => ({ ...prev, submitted: true }));
 
-    if (!newTaskDescription.trim()) {
+    const { newTaskDescription, priority, tag } = formState;
+    if (!newTaskDescription.trim() || !priority) {
       toast({
-        title: "Please enter a task description.",
-        status: "warning",
-        duration: 2000,
-        isClosable: true,
-      });
-      return;
-    }
-
-    if (!priority) {
-      setIsPriorityInvalid(true);
-      toast({
-        title: "Priority selection is required.",
-        description: "Please select a priority for the task.",
+        title: "Validation Error",
+        description: "Please ensure all fields are filled out correctly.",
         status: "warning",
         duration: 2000,
         isClosable: true,
@@ -52,22 +53,26 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
     }
 
     try {
-      await axios.post("http://localhost:3005/task", {
+      await addTask({
         description: newTaskDescription.trim(),
         priority,
+        tagNames: tag ? [tag] : [],
       });
-      setNewTaskDescription("");
-      setPriority("");
-      setIsPriorityInvalid(false);
-      setSubmitted(false);
-
+      setFormState({
+        newTaskDescription: "",
+        priority: "",
+        tag: "",
+        submitted: false,
+      });
       toast({
         title: "Task added successfully.",
         status: "success",
         duration: 2000,
         isClosable: true,
       });
+      onTasksUpdated();
     } catch (error) {
+      console.error("An error occurred while adding the task:", error);
       toast({
         title: "An error occurred while adding the task.",
         description: "Please try again.",
@@ -76,32 +81,34 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
         isClosable: true,
       });
     }
-    onTasksUpdated();
   };
+
+  const { newTaskDescription, priority, tag, submitted } = formState;
 
   return (
     <VStack
       as="form"
-      onSubmit={addTask}
+      onSubmit={handleAddTask}
       spacing={4}
       align="stretch"
       width="full"
     >
       <Heading size="lg" pb={4}>
         Add Task
-      </Heading>{" "}
+      </Heading>
       <HStack spacing={4} align="flex-end">
         <FormControl
           isInvalid={submitted && !newTaskDescription.trim()}
           flex={2}
         >
           <FormLabel htmlFor="new-task-description">
-            New Task Description
+            New Task Description*
           </FormLabel>
           <Input
             id="new-task-description"
+            name="newTaskDescription"
             value={newTaskDescription}
-            onChange={(e) => setNewTaskDescription(e.target.value)}
+            onChange={handleInputChange}
             placeholder="Enter a new task..."
             size="md"
           />
@@ -109,24 +116,36 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
             <FormErrorMessage>Task description is required.</FormErrorMessage>
           )}
         </FormControl>
-        <FormControl isInvalid={submitted && isPriorityInvalid} flex={1}>
-          <FormLabel htmlFor="task-priority">Priority</FormLabel>
+        <FormControl isInvalid={submitted && !priority} flex={1}>
+          <FormLabel htmlFor="task-priority">Priority*</FormLabel>
           <Select
             id="task-priority"
+            name="priority"
             value={priority}
-            onChange={(e) => {
-              setIsPriorityInvalid(false);
-              setPriority(e.target.value);
-            }}
+            onChange={handleInputChange}
             placeholder="Select priority"
           >
             <option value="High">High</option>
             <option value="Medium">Medium</option>
             <option value="Low">Low</option>
           </Select>
-          {submitted && isPriorityInvalid && (
+          {submitted && !priority && (
             <FormErrorMessage>Priority selection is required.</FormErrorMessage>
           )}
+        </FormControl>
+        <FormControl flex={1}>
+          <FormLabel htmlFor="task-tag">Tag</FormLabel>
+          <Select
+            id="task-tag"
+            name="tag"
+            value={tag}
+            onChange={handleInputChange}
+            placeholder="Select tag"
+          >
+            <option value="Work">Work</option>
+            <option value="Study">Study</option>
+            <option value="Personal">Personal</option>
+          </Select>
         </FormControl>
       </HStack>
       <Button type="submit" bg="#0A8080" size="lg" alignSelf="flex-end">
