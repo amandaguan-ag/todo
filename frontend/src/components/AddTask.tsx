@@ -11,6 +11,7 @@ import {
   HStack,
   Heading,
   Text,
+  Switch, 
 } from "@chakra-ui/react";
 import { addTask } from "../api/tasksApi";
 
@@ -35,7 +36,7 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated, userEmail }) => {
       | React.ChangeEvent<HTMLInputElement>
       | React.ChangeEvent<HTMLSelectElement>
   ) => {
-    const target = e.target as HTMLInputElement; 
+    const target = e.target as HTMLInputElement;
     const value = target.type === "checkbox" ? target.checked : target.value;
     setFormState((prev) => ({
       ...prev,
@@ -179,22 +180,23 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated, userEmail }) => {
           </Select>
         </FormControl>
       </HStack>
-      <HStack spacing={4} align="flex-end">
-        <FormControl display="flex" alignItems="center">
+      <HStack spacing={4} align="center">
+        <FormControl flex={1} display="flex" alignItems="center">
           <FormLabel htmlFor="is-recurring" mb="0">
             Recurring
           </FormLabel>
-          <input
+          <Switch
             id="is-recurring"
             name="isRecurring"
-            type="checkbox"
-            checked={isRecurring}
+            isChecked={isRecurring}
             onChange={handleInputChange}
+            colorScheme="green"
           />
         </FormControl>
         {isRecurring && (
           <FormControl
             isInvalid={submitted && isRecurring && !recurringInterval}
+            flex={2}
           >
             <FormLabel htmlFor="recurring-interval">Interval</FormLabel>
             <Select
