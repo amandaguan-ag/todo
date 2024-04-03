@@ -1,11 +1,5 @@
 import axios from "axios";
 
-interface TaskData {
-  description: string;
-  priority: string;
-  tagNames?: string[];
-}
-
 const BASE_URL = "http://localhost:3005";
 
 interface TaskData {
