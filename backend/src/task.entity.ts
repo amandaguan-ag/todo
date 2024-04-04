@@ -5,8 +5,10 @@ import {
   CreateDateColumn,
   ManyToMany,
   JoinTable,
+  ManyToOne,
 } from 'typeorm';
 import { Tag } from './tag.entity';
+import { User } from './user.entity'; 
 
 @Entity()
 export class Task {
@@ -29,12 +31,9 @@ export class Task {
   @JoinTable()
   tags: Tag[];
 
-  @Column({ nullable: true })
-  recurringInterval: string;
-
   @Column({ type: 'date', nullable: true })
-  nextOccurrenceDate: Date;
-  
-  @Column({ nullable: true })
-  userEmail: string; 
+  dueDate: Date;
+
+  @ManyToOne(() => User, (user) => user.tasks)
+  user: User;
 }
