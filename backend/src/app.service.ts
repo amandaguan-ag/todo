@@ -67,17 +67,7 @@ export class AppService {
     if (!task) {
       throw new Error(`Task with ID ${id} not found.`);
     }
-
     task.completed = !task.completed;
-
-    if (task.recurringInterval && task.completed) {
-      task.nextOccurrenceDate = this.calculateNextOccurrence(
-        task.recurringInterval,
-        task.nextOccurrenceDate,
-      );
-      task.completed = false;
-    }
-
     await this.taskRepository.save(task);
     return task;
   }
