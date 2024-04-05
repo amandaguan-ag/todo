@@ -2,14 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './task.entity';
 import { Tag } from './tag.entity';
-import { Repository, LessThanOrEqual } from 'typeorm'; // Added LessThanOrEqual here
+import { Repository, LessThanOrEqual } from 'typeorm';
 import { HttpException, HttpStatus } from '@nestjs/common';
+import { User } from './user.entity';
 
 @Injectable()
 export class AppService {
   constructor(
     @InjectRepository(Task)
     private taskRepository: Repository<Task>,
+    @InjectRepository(User) 
+    private userRepository: Repository<User>, 
     @InjectRepository(Tag)
     private tagRepository: Repository<Tag>,
   ) {}
@@ -17,78 +20,41 @@ export class AppService {
   async addTask(taskData: {
     description: string;
     priority: string;
-    tagNames: string[];
+    userEmail: string;
+    dueDate: Date;
   }) {
     try {
-      const tags = await Promise.all(
-        taskData.tagNames.map(async (name) => {
-          let tag = await this.tagRepository.findOne({ where: { name } });
-          if (!tag) {
-            tag = this.tagRepository.create({ name });
-            await this.tagRepository.save(tag);
-          }
-          return tag;
-        }),
-      );
+      const user = await this.userRepository.findOne({
+        where: { email: taskData.userEmail },
+      });
 
-      const newTask = this.taskRepository.create({ ...taskData, tags });
+      if (!user) {
+        console.error(`User with email ${taskData.userEmail} not found.`);
+        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      }
+
+      const newTask = this.taskRepository.create({
+        ...taskData,
+        user: user,
+      });
+
       await this.taskRepository.save(newTask);
-      return await this.getTasks();
+      return newTask;
     } catch (error) {
-      console.error(error);
-      throw new HttpException(
-        error.message || 'Failed to create task',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      console.error('Error creating task:', error);
+      if (error.status) {
+        throw error;
+      } else {
+        throw new HttpException(
+          'Failed to create task',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
     }
   }
 
   async getTasks() {
     return await this.taskRepository.find({ relations: ['tags'] });
-  }
-
-  async toggleTaskCompletion(id: number): Promise<Task> {
-    const task = await this.taskRepository.findOne({ where: { id } });
-    if (!task) {
-      throw new Error(`Task with ID ${id} not found.`);
-    }
-
-    task.completed = !task.completed;
-
-    if (task.recurringInterval && task.completed) {
-      task.nextOccurrenceDate = this.calculateNextOccurrence(
-        task.recurringInterval,
-        task.nextOccurrenceDate,
-      );
-      task.completed = false;
-    }
-
-    await this.taskRepository.save(task);
-    return task;
-  }
-
-  private calculateNextOccurrence(
-    recurringInterval: string,
-    currentNextOccurrenceDate: Date,
-  ): Date {
-    const currentDate = new Date(currentNextOccurrenceDate);
-    switch (recurringInterval) {
-      case 'Daily':
-        currentDate.setDate(currentDate.getDate() + 1);
-        break;
-      case 'Weekly':
-        currentDate.setDate(currentDate.getDate() + 7);
-        break;
-      case 'Bi-Weekly':
-        currentDate.setDate(currentDate.getDate() + 14);
-        break;
-      case 'Monthly':
-        currentDate.setMonth(currentDate.getMonth() + 1);
-        break;
-      default:
-        throw new Error(`Unsupported recurring interval: ${recurringInterval}`);
-    }
-    return currentDate;
   }
 
   async updateTask(
@@ -139,33 +105,47 @@ export class AppService {
     }
   }
 
-  async setTaskRecurring(
-    id: number,
-    recurringData: {
-      recurringInterval: string;
-      nextOccurrenceDate: Date;
-    },
-  ): Promise<Task> {
-    const task = await this.taskRepository.findOne({ where: { id } });
-    if (!task) {
-      throw new HttpException(
-        `Task with ID ${id} not found.`,
-        HttpStatus.NOT_FOUND,
-      );
+  async registerUser(userData: { name: string; email: string }) {
+    try {
+      const existingUser = await this.userRepository.findOne({
+        where: { email: userData.email },
+      });
+
+      if (existingUser) {
+        throw new HttpException(
+          `User with email ${userData.email} already exists`,
+          HttpStatus.CONFLICT,
+        );
+      }
+
+      const newUser = this.userRepository.create(userData);
+      await this.userRepository.save(newUser);
+
+      return newUser;
+    } catch (error) {
+      console.error('Error registering user:', error);
+
+      if (error.status) {
+        throw error;
+      } else {
+        throw new HttpException(
+          'Failed to register user',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
     }
-
-    task.recurringInterval = recurringData.recurringInterval;
-    task.nextOccurrenceDate = recurringData.nextOccurrenceDate;
-
-    await this.taskRepository.save(task);
-    return task;
   }
 
-  async getTaskReminders(): Promise<Task[]> {
+  async getUpcomingTasks() {
     const today = new Date();
+    const nextWeek = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate() + 7,
+    );
     return await this.taskRepository.find({
       where: {
-        nextOccurrenceDate: LessThanOrEqual(today),
+        dueDate: LessThanOrEqual(nextWeek),
         completed: false,
       },
     });

@@ -14,10 +14,16 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Post('/task')
-  async addTask(
-    @Body() body: { description: string; priority: string; tagNames: string[] },
+  addTask(
+    @Body()
+    body: {
+      description: string;
+      priority: string;
+      userEmail: string;
+      dueDate: Date;
+    },
   ) {
-    return await this.appService.addTask(body);
+    return this.appService.addTask(body);
   }
 
   @Get('/tasks')
@@ -25,37 +31,26 @@ export class AppController {
     return this.appService.getTasks();
   }
 
-  @Patch('/task/:id/completion')
-  async toggleTaskCompletion(@Param('id') id: string) {
-    return await this.appService.toggleTaskCompletion(+id);
-  }
   @Patch('/task/:id')
-  async updateTask(
+  updateTask(
     @Param('id') id: string,
-    @Body()
-    updateTaskDto: {
-      description?: string;
-      priority?: string;
-      tagNames?: string[];
-    },
+    @Body() updateTaskDto: { description?: string; priority?: string },
   ) {
-    return await this.appService.updateTask(+id, updateTaskDto);
+    return this.appService.updateTask(+id, updateTaskDto);
   }
 
   @Delete('/task/:id')
-  async deleteTask(@Param('id') id: string) {
-    return await this.appService.deleteTask(+id);
-  }
-  @Patch('/task/:id/recurring')
-  async setTaskRecurring(
-    @Param('id') id: string,
-    @Body() body: { recurringInterval: string; nextOccurrenceDate: Date },
-  ) {
-    return await this.appService.setTaskRecurring(+id, body);
+  deleteTask(@Param('id') id: string) {
+    return this.appService.deleteTask(+id);
   }
 
-  @Get('/task/reminders')
-  getTaskReminders() {
-    return this.appService.getTaskReminders();
+  @Post('/register')
+  registerUser(@Body() body: { name: string; email: string }) {
+    return this.appService.registerUser(body);
+  }
+
+  @Get('/task/upcoming')
+  getUpcomingTasks() {
+    return this.appService.getUpcomingTasks();
   }
 }
