@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, LessThanOrEqual } from 'typeorm';
 import * as nodemailer from 'nodemailer';
-import { Task } from './task.entity'; 
+import { Task } from './task.entity';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class NotificationService {
@@ -22,7 +23,7 @@ export class NotificationService {
 
     const taskWithUser = await this.taskRepository.findOne({
       where: { id: task.id },
-      relations: ['user'], 
+      relations: ['user'],
     });
 
     if (!taskWithUser || !taskWithUser.user) {
@@ -31,7 +32,7 @@ export class NotificationService {
 
     await transporter.sendMail({
       from: process.env.EMAIL_FROM,
-      to: taskWithUser.user.email, 
+      to: taskWithUser.user.email,
       subject: 'Task Reminder',
       text: `You have an upcoming task: ${task.description}`,
     });
@@ -39,7 +40,7 @@ export class NotificationService {
 
   public async sendTestEmail(): Promise<void> {
     const task = await this.taskRepository.findOne({
-      where: { completed: false }, 
+      where: { completed: false },
       order: { createdAt: 'DESC' },
     });
 
@@ -59,6 +60,26 @@ export class NotificationService {
       await this.sendEmailNotification(task);
     } else {
       throw new Error(`Task with ID ${taskId} not found.`);
+    }
+  }
+
+  @Cron('0 30 18 * * *') 
+  async handleCron() {
+    const tasks = await this.taskRepository.find({
+      where: {
+        dueDate: LessThanOrEqual(new Date()),
+        completed: false,
+      },
+      order: {
+        createdAt: 'ASC',
+      },
+      relations: ['user'], 
+    });
+
+    for (const task of tasks) {
+      if (task.user) {
+        await this.sendEmailNotification(task);
+      }
     }
   }
 }
