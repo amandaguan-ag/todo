@@ -20,9 +20,10 @@ const availableTags = ["Work", "Study", "Personal"];
 interface HomeProps {
   tasks: Task[];
   onTasksUpdated: () => void;
+  userEmail: string;
 }
 
-const Home: React.FC<HomeProps> = ({ tasks, onTasksUpdated }) => {
+const Home: React.FC<HomeProps> = ({ tasks, onTasksUpdated, userEmail }) => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [filteredCompletedTasks, setFilteredCompletedTasks] = useState<Task[]>(
     []
@@ -37,7 +38,7 @@ const Home: React.FC<HomeProps> = ({ tasks, onTasksUpdated }) => {
         ? taskList.filter((task) =>
             task.tags.some((tag) => selectedTags.includes(tag.name))
           )
-        : taskList; 
+        : taskList;
 
     setFilteredCompletedTasks(
       filterTasksByTags(tasks.filter((task) => task.completed))
@@ -58,7 +59,7 @@ const Home: React.FC<HomeProps> = ({ tasks, onTasksUpdated }) => {
       <Heading as="h1" size="xl" textAlign="center" my={6}>
         Task Manager
       </Heading>
-      <AddTask onTasksUpdated={onTasksUpdated} />
+      <AddTask onTasksUpdated={onTasksUpdated} userEmail={userEmail} />
       <Container
         centerContent
         p={4}

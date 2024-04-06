@@ -16,16 +16,16 @@ import { addTask } from "../api/tasksApi";
 
 interface AddTaskProps {
   onTasksUpdated: () => void;
+  userEmail: string;
 }
 
-const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
+const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated, userEmail }) => {
   const [formState, setFormState] = useState({
     newTaskDescription: "",
     priority: "",
     tag: "",
-    isRecurring: false,
-    recurringInterval: "",
-    submitted: false,
+    dueDate: new Date(),
+    submitted: false, 
   });
   const toast = useToast();
 
@@ -34,7 +34,7 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
       | React.ChangeEvent<HTMLInputElement>
       | React.ChangeEvent<HTMLSelectElement>
   ) => {
-    const target = e.target as HTMLInputElement; // Assume all inputs including select are covered by this type
+    const target = e.target as HTMLInputElement;
     const value = target.type === "checkbox" ? target.checked : target.value;
     setFormState((prev) => ({
       ...prev,
@@ -46,13 +46,10 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
     e.preventDefault();
     setFormState((prev) => ({ ...prev, submitted: true }));
 
-    const {
-      newTaskDescription,
-      priority,
-      tag,
-      isRecurring,
-      recurringInterval,
-    } = formState;
+    const { newTaskDescription, priority, tag } = formState;
+
+    const tagNames = tag ? [tag] : [];
+
     if (!newTaskDescription.trim() || !priority) {
       toast({
         title: "Validation Error",
@@ -69,16 +66,15 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
       await addTask({
         description: newTaskDescription.trim(),
         priority,
-        tagNames: tag ? [tag] : [],
-        isRecurring,
-        recurringInterval: isRecurring ? recurringInterval : undefined,
+        userEmail,
+        dueDate: formState.dueDate.toISOString(), 
+        tagNames,
       });
       setFormState({
         newTaskDescription: "",
         priority: "",
         tag: "",
-        isRecurring: false,
-        recurringInterval: "",
+        dueDate: new Date(), 
         submitted: false,
       });
       toast({
@@ -100,14 +96,7 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
     }
   };
 
-  const {
-    newTaskDescription,
-    priority,
-    tag,
-    isRecurring,
-    recurringInterval,
-    submitted,
-  } = formState;
+  const { newTaskDescription, priority, tag, submitted } = formState;
 
   return (
     <VStack
@@ -124,9 +113,10 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
         <FormControl
           isInvalid={submitted && !newTaskDescription.trim()}
           flex={2}
+          isRequired
         >
           <FormLabel htmlFor="new-task-description">
-            New Task Description*
+            New Task Description
           </FormLabel>
           <Input
             id="new-task-description"
@@ -140,8 +130,8 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
             <FormErrorMessage>Task description is required.</FormErrorMessage>
           )}
         </FormControl>
-        <FormControl isInvalid={submitted && !priority} flex={1}>
-          <FormLabel htmlFor="task-priority">Priority*</FormLabel>
+        <FormControl isInvalid={submitted && !priority} flex={1} isRequired>
+          <FormLabel htmlFor="task-priority">Priority</FormLabel>
           <Select
             id="task-priority"
             name="priority"
@@ -171,44 +161,6 @@ const AddTask: React.FC<AddTaskProps> = ({ onTasksUpdated }) => {
             <option value="Personal">Personal</option>
           </Select>
         </FormControl>
-      </HStack>
-      <HStack spacing={4} align="flex-end">
-        <FormControl display="flex" alignItems="center">
-          <FormLabel htmlFor="is-recurring" mb="0">
-            Recurring
-          </FormLabel>
-          <input
-            id="is-recurring"
-            name="isRecurring"
-            type="checkbox"
-            checked={isRecurring}
-            onChange={handleInputChange}
-          />
-        </FormControl>
-        {isRecurring && (
-          <FormControl
-            isInvalid={submitted && isRecurring && !recurringInterval}
-          >
-            <FormLabel htmlFor="recurring-interval">Interval</FormLabel>
-            <Select
-              id="recurring-interval"
-              name="recurringInterval"
-              value={recurringInterval}
-              onChange={handleInputChange}
-              placeholder="Select interval"
-            >
-              <option value="Daily">Daily</option>
-              <option value="Weekly">Weekly</option>
-              <option value="Bi-Weekly">Bi-Weekly</option>
-              <option value="Monthly">Monthly</option>
-            </Select>
-            {submitted && isRecurring && !recurringInterval && (
-              <FormErrorMessage>
-                Recurring interval is required.
-              </FormErrorMessage>
-            )}
-          </FormControl>
-        )}
       </HStack>
       <Button type="submit" bg="#0A8080" size="lg" alignSelf="flex-end">
         <Text color="white">Add Task</Text>

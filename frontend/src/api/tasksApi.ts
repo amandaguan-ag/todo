@@ -5,11 +5,16 @@ const BASE_URL = "http://localhost:3005";
 interface TaskData {
   description: string;
   priority: string;
-  tagNames: string[];
-  isRecurring?: boolean; 
-  recurringInterval?: string;
+  userEmail: string;
+  dueDate: string; 
+  tagNames?: string[];
 }
 
+interface TaskUpdateData {
+  description: string;
+  priority: "High" | "Medium" | "Low";
+  tagNames: string[];
+}
 
 type HttpMethod = "GET" | "POST" | "PATCH" | "DELETE";
 
@@ -33,9 +38,10 @@ const makeApiRequest = async (
 };
 
 const handleError = (error: any) => {
-  if (axios.isAxiosError(error)) {
+  if (axios.isAxiosError(error) && error.response) {
     console.error(
-      `API Error: ${error.response?.status} - ${error.response?.data}`
+      `API Error: ${error.response.status} - ${error.response.statusText}`,
+      error.response.data
     );
   } else {
     console.error("Non-API error:", error);
@@ -51,7 +57,7 @@ export const addTask = (taskData: TaskData) =>
 export const updateTaskDescription = (taskId: number, description: string) =>
   makeApiRequest(`/task/${taskId}/description`, "PATCH", { description });
 
-export const updateTask = (taskId: number, taskData: TaskData) =>
+export const updateTask = (taskId: number, taskData: TaskUpdateData) =>
   makeApiRequest(`/task/${taskId}`, "PATCH", taskData);
 
 export const toggleTaskCompletion = (taskId: number) =>
@@ -59,3 +65,12 @@ export const toggleTaskCompletion = (taskId: number) =>
 
 export const deleteTask = (taskId: number) =>
   makeApiRequest(`/task/${taskId}`, "DELETE");
+
+interface UserData {
+  name: string;
+  email: string;
+}
+
+export const registerUser = async (userData: UserData) => {
+  return makeApiRequest("/register", "POST", userData);
+};
