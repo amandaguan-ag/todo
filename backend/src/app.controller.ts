@@ -8,10 +8,14 @@ import {
   Delete,
 } from '@nestjs/common';
 import { AppService } from './app.service';
+import { NotificationService } from './notification.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly appService: AppService,
+    private readonly notificationService: NotificationService,
+  ) {}
 
   @Post('/task')
   addTask(
@@ -52,5 +56,17 @@ export class AppController {
   @Get('/task/upcoming')
   getUpcomingTasks() {
     return this.appService.getUpcomingTasks();
+  }
+
+  @Get('/send-test-email')
+  async sendTestEmail() {
+    await this.notificationService.sendTestEmail();
+    return { message: 'Test email sent.' };
+  }
+
+  @Get('/send-email-now/:taskId')
+  async sendEmailNow(@Param('taskId') taskId: number) {
+    await this.notificationService.sendEmailNow(taskId);
+    return { message: 'Email sent for task ' + taskId };
   }
 }
