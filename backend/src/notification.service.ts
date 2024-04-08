@@ -41,36 +41,7 @@ export class NotificationService {
     });
   }
 
-  public async sendTestEmail(): Promise<void> {
-    const sevenDaysFromNow = new Date();
-    sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);
-
-    const tasksDueSoon = await this.taskRepository.find({
-      where: {
-        dueDate: LessThan(sevenDaysFromNow),
-        completed: false,
-      },
-    });
-
-    if (tasksDueSoon.length === 0) {
-      console.error('No upcoming tasks found.');
-      return;
-    }
-
-    const tasksByEmail: { [key: string]: Task[] } = {};
-    tasksDueSoon.forEach((task) => {
-      if (!tasksByEmail[task.userEmail]) {
-        tasksByEmail[task.userEmail] = [];
-      }
-      tasksByEmail[task.userEmail].push(task);
-    });
-
-    Object.entries(tasksByEmail).forEach(([email, tasks]) => {
-      this.sendEmail(email, tasks);
-    });
-  }
-
-  @Cron('14 14 * * *') 
+  @Cron('14 14 * * *')
   async handleCron() {
     const sevenDaysFromNow = new Date();
     sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);

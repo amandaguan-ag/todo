@@ -56,10 +56,4 @@ export class AppController {
   async deleteTask(@Param('id') id: string) {
     return await this.appService.deleteTask(+id);
   }
-
-  @Post('/sendTestEmail')
-  async sendTestEmail() {
-    await this.notificationService.sendTestEmail();
-    return { message: 'Test email sent.' };
-  }
 }
