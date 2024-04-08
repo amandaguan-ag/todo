@@ -24,11 +24,39 @@ export class NotificationService {
       },
     });
 
+    const taskTableRows = tasks
+      .map(
+        (task) =>
+          `<tr>
+      <td>${task.description}</td>
+      <td>${task.dueDate.toDateString()}</td>
+      <td>${task.priority}</td>
+    </tr>`,
+      )
+      .join('');
+
+    const emailHtml = `
+    <h1>Upcoming Due Tasks</h1>
+    <p>You have the following tasks due in the next 7 days:</p>
+    <table border="1" style="width: 100%; border-collapse: collapse;">
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th>Due Date</th>
+          <th>Priority</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${taskTableRows}
+      </tbody>
+    </table>
+  `;
+
     const mailOptions = {
       from: '"Task Manager" <your-email@example.com>',
       to: userEmail,
       subject: 'Upcoming Due Tasks',
-      text: `You have tasks due in the next 7 days: ${tasks.map((task) => task.description).join(', ')}`,
+      html: emailHtml, 
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
