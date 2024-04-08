@@ -7,6 +7,7 @@ import { Task } from './task.entity';
 import { Tag } from './tag.entity';
 import typeorm from './config/typeorm';
 import { ScheduleModule } from '@nestjs/schedule';
+import { NotificationService } from './notification.service';
 
 @Module({
   imports: [
@@ -23,6 +24,6 @@ import { ScheduleModule } from '@nestjs/schedule';
     TypeOrmModule.forFeature([Task, Tag]),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, NotificationService],
 })
 export class AppModule {}

@@ -33,20 +33,36 @@ export class NotificationService {
 
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
-        return console.log(error);
+        console.error('Email sending error:', error);
+        return;
       }
       console.log('Message sent: %s', info.messageId);
+      console.log('Response:', info);
     });
   }
 
-  @Cron('30 23 * * *') 
+  public async sendTestEmail(): Promise<void> {
+    const task = await this.taskRepository.findOne({
+      where: { completed: false },
+      order: { createdAt: 'DESC' },
+    });
+
+    if (!task) {
+      console.error('No task available for sending test email.');
+      return;
+    }
+
+    await this.sendEmail(task.userEmail, [task]);
+  }
+
+  @Cron('45 13 * * *')
   async handleCron() {
     const sevenDaysFromNow = new Date();
     sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);
 
     const tasksDueSoon = await this.taskRepository.find({
       where: {
-        dueDate: LessThan(sevenDaysFromNow), 
+        dueDate: LessThan(sevenDaysFromNow),
       },
     });
 
@@ -59,10 +75,10 @@ export class NotificationService {
         return acc;
       },
       {} as { [key: string]: Task[] },
-    ); 
+    );
 
     Object.entries(tasksByEmail).forEach(([email, tasks]) => {
-      this.sendEmail(email, tasks as Task[]); 
+      this.sendEmail(email, tasks as Task[]);
     });
   }
 }
