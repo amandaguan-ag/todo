@@ -56,6 +56,8 @@ DATABASE_PORT=5432
 DATABASE_USERNAME=<Your_PostgreSQL_Username>
 DATABASE_PASSWORD=<Your_PostgreSQL_Password>
 DATABASE_NAME=<Your_Database_Name>
+EMAIL_USER=<Your_Email>
+EMAIL_PASS=<Your_Email_Password>
 ```
 
 #### Migrate Database
@@ -63,7 +65,7 @@ DATABASE_NAME=<Your_Database_Name>
 Run the following command to perform the initial migration which will create the `Todo` table in your database.
 
 ```sh
-npm run typeorm migration:run
+npm run migration:run    
 ```
 
 ### Start the Application
