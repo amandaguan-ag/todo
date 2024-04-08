@@ -42,20 +42,35 @@ export class NotificationService {
   }
 
   public async sendTestEmail(): Promise<void> {
-    const task = await this.taskRepository.findOne({
-      where: { completed: false },
-      order: { createdAt: 'DESC' },
+    const sevenDaysFromNow = new Date();
+    sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);
+
+    const tasksDueSoon = await this.taskRepository.find({
+      where: {
+        dueDate: LessThan(sevenDaysFromNow),
+        completed: false,
+      },
     });
 
-    if (!task) {
-      console.error('No task available for sending test email.');
+    if (tasksDueSoon.length === 0) {
+      console.error('No upcoming tasks found.');
       return;
     }
 
-    await this.sendEmail(task.userEmail, [task]);
+    const tasksByEmail: { [key: string]: Task[] } = {};
+    tasksDueSoon.forEach((task) => {
+      if (!tasksByEmail[task.userEmail]) {
+        tasksByEmail[task.userEmail] = [];
+      }
+      tasksByEmail[task.userEmail].push(task);
+    });
+
+    Object.entries(tasksByEmail).forEach(([email, tasks]) => {
+      this.sendEmail(email, tasks);
+    });
   }
 
-  @Cron('45 13 * * *')
+  @Cron('14 14 * * *') 
   async handleCron() {
     const sevenDaysFromNow = new Date();
     sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);
@@ -63,22 +78,20 @@ export class NotificationService {
     const tasksDueSoon = await this.taskRepository.find({
       where: {
         dueDate: LessThan(sevenDaysFromNow),
+        completed: false,
       },
     });
 
-    const tasksByEmail: { [key: string]: Task[] } = tasksDueSoon.reduce(
-      (acc, task) => {
-        if (!acc[task.userEmail]) {
-          acc[task.userEmail] = [];
-        }
-        acc[task.userEmail].push(task);
-        return acc;
-      },
-      {} as { [key: string]: Task[] },
-    );
+    const tasksByEmail: { [key: string]: Task[] } = {};
+    tasksDueSoon.forEach((task) => {
+      if (!tasksByEmail[task.userEmail]) {
+        tasksByEmail[task.userEmail] = [];
+      }
+      tasksByEmail[task.userEmail].push(task);
+    });
 
     Object.entries(tasksByEmail).forEach(([email, tasks]) => {
-      this.sendEmail(email, tasks as Task[]);
+      this.sendEmail(email, tasks);
     });
   }
 }
