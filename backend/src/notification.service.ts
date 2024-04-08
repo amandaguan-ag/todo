@@ -41,7 +41,7 @@ export class NotificationService {
     });
   }
 
-  @Cron('14 14 * * *')
+  @Cron('35 14 * * *')
   async handleCron() {
     const sevenDaysFromNow = new Date();
     sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);
@@ -53,16 +53,22 @@ export class NotificationService {
       },
     });
 
-    const tasksByEmail: { [key: string]: Task[] } = {};
-    tasksDueSoon.forEach((task) => {
-      if (!tasksByEmail[task.userEmail]) {
-        tasksByEmail[task.userEmail] = [];
-      }
-      tasksByEmail[task.userEmail].push(task);
-    });
+    const tasksByEmail: Record<string, Task[]> = tasksDueSoon.reduce(
+      (acc, task) => {
+        const userEmail = task.userEmail;
+        if (!acc[userEmail]) {
+          acc[userEmail] = [];
+        }
+        acc[userEmail].push(task);
+        return acc;
+      },
+      {},
+    );
 
-    Object.entries(tasksByEmail).forEach(([email, tasks]) => {
-      this.sendEmail(email, tasks);
-    });
+    await Promise.all(
+      Object.entries(tasksByEmail).map(([email, tasks]) =>
+        this.sendEmail(email, tasks),
+      ),
+    );
   }
 }
