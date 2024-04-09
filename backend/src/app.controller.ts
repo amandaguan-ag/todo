@@ -8,14 +8,24 @@ import {
   Delete,
 } from '@nestjs/common';
 import { AppService } from './app.service';
+import { NotificationService } from './notification.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly appService: AppService,
+    private readonly notificationService: NotificationService,
+  ) {}
 
   @Post('/task')
   async addTask(
-    @Body() body: { description: string; priority: string; tagNames: string[] },
+    @Body()
+    body: {
+      description: string;
+      priority: string;
+      tagNames: string[];
+      userEmail: string;
+    },
   ) {
     return await this.appService.addTask(body);
   }
