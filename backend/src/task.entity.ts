@@ -6,7 +6,7 @@ import {
   ManyToMany,
   JoinTable,
 } from 'typeorm';
-import { Tag } from './tag.entity'; 
+import { Tag } from './tag.entity';
 
 @Entity()
 export class Task {
@@ -24,6 +24,12 @@ export class Task {
 
   @CreateDateColumn()
   createdAt: Date;
+
+  @Column()
+  dueDate: Date; 
+
+  @Column()
+  userEmail: string;
 
   @ManyToMany(() => Tag, (tag) => tag.tasks, { cascade: true })
   @JoinTable()

@@ -6,6 +6,7 @@ interface TaskData {
   description: string;
   priority: string;
   tagNames?: string[];
+  userEmail: string; 
 }
 
 type HttpMethod = "GET" | "POST" | "PATCH" | "DELETE";

@@ -1,4 +1,4 @@
-import { Tag } from "./Tag"; 
+import { Tag } from "./Tag";
 
 export interface Task {
   id: number;
@@ -6,5 +6,6 @@ export interface Task {
   completed: boolean;
   priority: "High" | "Medium" | "Low";
   createdAt: string;
-  tags: Tag[]; 
+  tags: Tag[];
+  userEmail: string; 
 }

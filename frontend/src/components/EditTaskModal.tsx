@@ -76,6 +76,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
         description: state.description,
         priority: state.priority,
         tagNames: state.tags.map((tag) => tag.name),
+        userEmail: task.userEmail, 
       });
       onUpdate();
       onClose();
@@ -120,7 +121,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
             <FormLabel>Tags</FormLabel>
             <Select
               multiple
-              value={state.tags.map((tag) => tag.id.toString())} 
+              value={state.tags.map((tag) => tag.id.toString())}
               onChange={(e: ChangeEvent<HTMLSelectElement>) => {
                 const selectedOptions = Array.from(
                   e.target.selectedOptions,
