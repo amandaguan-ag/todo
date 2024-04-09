@@ -18,6 +18,7 @@ export class AppService {
     description: string;
     priority: string;
     tagNames: string[];
+    userEmail: string; 
   }) {
     try {
       const tags = await Promise.all(
@@ -31,7 +32,14 @@ export class AppService {
         }),
       );
 
-      const newTask = this.taskRepository.create({ ...taskData, tags });
+      const dueDate = new Date();
+      dueDate.setDate(dueDate.getDate() + 7);
+
+      const newTask = this.taskRepository.create({
+        ...taskData,
+        dueDate,
+        tags,
+      });
       await this.taskRepository.save(newTask);
       return await this.getTasks();
     } catch (error) {
