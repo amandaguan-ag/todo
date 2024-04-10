@@ -56,7 +56,7 @@ export class NotificationService {
       from: '"Task Manager" <your-email@example.com>',
       to: userEmail,
       subject: 'Upcoming Due Tasks',
-      html: emailHtml, 
+      html: emailHtml,
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
@@ -88,7 +88,7 @@ export class NotificationService {
 
     const tasksByEmail: Record<string, Task[]> = tasksDueSoon.reduce(
       (acc, task) => {
-        const userEmail = task.userEmail;
+        const userEmail = task.user.email; 
         if (!acc[userEmail]) {
           acc[userEmail] = [];
         }

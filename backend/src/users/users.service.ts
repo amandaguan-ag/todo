@@ -13,5 +13,13 @@ export class UsersService {
   async findOne(email: string): Promise<User | undefined> {
     return this.usersRepository.findOne({ where: { email } });
   }
-
+  
+  async create(userDetails: {
+    email: string;
+    password: string;
+  }): Promise<User> {
+    const newUser = this.usersRepository.create(userDetails);
+    await this.usersRepository.save(newUser);
+    return newUser;
+  }
 }

@@ -5,8 +5,10 @@ import {
   CreateDateColumn,
   ManyToMany,
   JoinTable,
+  ManyToOne,
 } from 'typeorm';
 import { Tag } from './tag.entity';
+import { User } from './users/user.entity'; 
 
 @Entity()
 export class Task {
@@ -26,10 +28,10 @@ export class Task {
   createdAt: Date;
 
   @Column()
-  dueDate: Date; 
+  dueDate: Date;
 
-  @Column()
-  userEmail: string;
+  @ManyToOne(() => User, (user) => user.tasks, { eager: true })
+  user: User;
 
   @ManyToMany(() => Tag, (tag) => tag.tasks, { cascade: true })
   @JoinTable()
