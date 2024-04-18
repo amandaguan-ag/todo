@@ -1,33 +1,48 @@
 import { useState, useEffect } from "react";
 import { ChakraProvider, Box } from "@chakra-ui/react";
 import Home from "./components/Home";
-import EntryForm from "./components/EntryForm";
-import { Task } from "./types/Task";
+import SignIn from "./components/SignIn";
+import SignUp from "./components/SignUp";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import { fetchTasks } from "./api/tasksApi";
 import { sortTasks } from "./utils/taskUtils";
+import { Task } from "./types/Task";
 
 const App: React.FC = () => {
-  const [userDetailsEntered, setUserDetailsEntered] = useState(false);
-  const [userEmail, setUserEmail] = useState("");
+  const [userEmail, setUserEmail] = useState<string | null>(null);
   const [tasks, setTasks] = useState<Task[]>([]);
 
   useEffect(() => {
-    const loadTasks = async () => {
-      try {
-        const fetchedTasks = await fetchTasks();
-        const sortedTasks = sortTasks(fetchedTasks);
-        setTasks(sortedTasks);
-      } catch (error) {
-        console.error("Failed to fetch tasks:", error);
-      }
-    };
+    if (userEmail) {
+      const loadTasks = async () => {
+        try {
+          const fetchedTasks = await fetchTasks();
+          const sortedTasks = sortTasks(fetchedTasks);
+          setTasks(sortedTasks);
+        } catch (error) {
+          console.error("Failed to fetch tasks:", error);
+        }
+      };
 
-    loadTasks();
-  }, []);
+      loadTasks();
+    }
+  }, [userEmail]);
 
-  const handleUserDetailsSubmit = (name: string, email: string) => {
-    setUserEmail(email);
-    setUserDetailsEntered(true);
+  const handleUserSignIn = async (email: string, password: string) => {
+    console.log(email, password);
+
+    if (email === "user@example.com" && password === "password") {
+      setUserEmail(email);
+    } 
+  };
+
+  const handleLogout = () => {
+    setUserEmail(null); 
   };
 
   const handleTasksUpdated = async () => {
@@ -42,17 +57,42 @@ const App: React.FC = () => {
 
   return (
     <ChakraProvider>
-      {!userDetailsEntered ? (
-        <EntryForm onEnter={handleUserDetailsSubmit} />
-      ) : (
+      <Router>
         <Box m={10}>
-          <Home
-            tasks={tasks}
-            userEmail={userEmail}
-            onTasksUpdated={handleTasksUpdated}
-          />
+          <Routes>
+            <Route
+              path="/signin"
+              element={
+                <SignIn onSignIn={(email, password) => setUserEmail(email)} />
+              }
+            />
+            <Route
+              path="/signup"
+              element={
+                <SignUp
+                  onSignUp={(email, password) => console.log(email, password)}
+                />
+              }
+            />
+            <Route
+              path="/home"
+              element={
+                <Home
+                  tasks={tasks}
+                  userEmail={userEmail || ""}
+                  onTasksUpdated={handleTasksUpdated}
+                />
+              }
+            />
+            <Route
+              path="*"
+              element={
+                <Navigate to={userEmail ? "/home" : "/signin"} replace />
+              }
+            />
+          </Routes>
         </Box>
-      )}
+      </Router>
     </ChakraProvider>
   );
 };

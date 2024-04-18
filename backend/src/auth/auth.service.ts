@@ -12,6 +12,7 @@ export class AuthService {
 
   async signUp(email: string, password: string) {
     const hashedPassword = await bcrypt.hash(password, 10);
+    console.log(`Received email: ${email}, Hashed password: ${hashedPassword}`);
     const user = await this.usersService.create({
       email,
       password: hashedPassword,

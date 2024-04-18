@@ -57,3 +57,9 @@ export const toggleTaskCompletion = (taskId: number) =>
 
 export const deleteTask = (taskId: number) =>
   makeApiRequest(`/task/${taskId}`, "DELETE");
+
+export const signUp = (email: string, password: string) =>
+  makeApiRequest("/auth/signup", "POST", { email, password });
+
+export const signIn = (email: string, password: string) =>
+  makeApiRequest("/auth/signin", "POST", { email, password });

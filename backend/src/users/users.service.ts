@@ -13,13 +13,15 @@ export class UsersService {
   async findOne(email: string): Promise<User | undefined> {
     return this.usersRepository.findOne({ where: { email } });
   }
-  
+
   async create(userDetails: {
     email: string;
     password: string;
   }): Promise<User> {
+    console.log('Creating user:', userDetails);
     const newUser = this.usersRepository.create(userDetails);
     await this.usersRepository.save(newUser);
+    console.log('User created:', newUser);
     return newUser;
   }
 }
