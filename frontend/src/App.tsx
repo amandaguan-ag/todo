@@ -4,10 +4,10 @@ import Home from "./components/Home";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
 import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
+  createBrowserRouter,
+  RouterProvider,
+  RouteObject,
+  Navigate, 
 } from "react-router-dom";
 import { fetchTasks } from "./api/tasksApi";
 import { sortTasks } from "./utils/taskUtils";
@@ -28,71 +28,44 @@ const App: React.FC = () => {
           console.error("Failed to fetch tasks:", error);
         }
       };
-
       loadTasks();
     }
   }, [userEmail]);
 
-  const handleUserSignIn = async (email: string, password: string) => {
-    console.log(email, password);
+  const routes: RouteObject[] = [
+    {
+      path: "/signin",
+      element: <SignIn onSignIn={(email, password) => setUserEmail(email)} />,
+    },
+    {
+      path: "/signup",
+      element: (
+        <SignUp onSignUp={(email, password) => console.log(email, password)} />
+      ),
+    },
+    {
+      path: "/home",
+      element: (
+        <Home
+          tasks={tasks}
+          userEmail={userEmail || ""}
+          onTasksUpdated={() => {}}
+        />
+      ),
+    },
+    {
+      path: "*",
+      element: <Navigate to={userEmail ? "/home" : "/signin"} replace />,
+    },
+  ];
 
-    if (email === "user@example.com" && password === "password") {
-      setUserEmail(email);
-    } 
-  };
-
-  const handleLogout = () => {
-    setUserEmail(null); 
-  };
-
-  const handleTasksUpdated = async () => {
-    try {
-      const fetchedTasks = await fetchTasks();
-      const sortedTasks = sortTasks(fetchedTasks);
-      setTasks(sortedTasks);
-    } catch (error) {
-      console.error("Failed to fetch updated tasks:", error);
-    }
-  };
+  const router = createBrowserRouter(routes);
 
   return (
     <ChakraProvider>
-      <Router>
-        <Box m={10}>
-          <Routes>
-            <Route
-              path="/signin"
-              element={
-                <SignIn onSignIn={(email, password) => setUserEmail(email)} />
-              }
-            />
-            <Route
-              path="/signup"
-              element={
-                <SignUp
-                  onSignUp={(email, password) => console.log(email, password)}
-                />
-              }
-            />
-            <Route
-              path="/home"
-              element={
-                <Home
-                  tasks={tasks}
-                  userEmail={userEmail || ""}
-                  onTasksUpdated={handleTasksUpdated}
-                />
-              }
-            />
-            <Route
-              path="*"
-              element={
-                <Navigate to={userEmail ? "/home" : "/signin"} replace />
-              }
-            />
-          </Routes>
-        </Box>
-      </Router>
+      <RouterProvider router={router}></RouterProvider>
+      <Box m={10}>
+      </Box>
     </ChakraProvider>
   );
 };
