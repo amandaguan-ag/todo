@@ -5,7 +5,6 @@ import EntryForm from "./components/EntryForm";
 import { Task } from "./types/Task";
 import { fetchTasks } from "./api/tasksApi";
 import { sortTasks } from "./utils/taskUtils";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom"; 
 
 const App: React.FC = () => {
   const [userDetailsEntered, setUserDetailsEntered] = useState(false);
@@ -43,26 +42,17 @@ const App: React.FC = () => {
 
   return (
     <ChakraProvider>
-      <Router>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              !userDetailsEntered ? (
-                <EntryForm onEnter={handleUserDetailsSubmit} />
-              ) : (
-                <Box m={10}>
-                  <Home
-                    tasks={tasks}
-                    userEmail={userEmail}
-                    onTasksUpdated={handleTasksUpdated}
-                  />
-                </Box>
-              )
-            }
+      {!userDetailsEntered ? (
+        <EntryForm onEnter={handleUserDetailsSubmit} />
+      ) : (
+        <Box m={10}>
+          <Home
+            tasks={tasks}
+            userEmail={userEmail}
+            onTasksUpdated={handleTasksUpdated}
           />
-        </Routes>
-      </Router>
+        </Box>
+      )}
     </ChakraProvider>
   );
 };
