@@ -1,10 +1,17 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { IsEmail, IsNotEmpty } from 'class-validator';
+import { Transform } from 'class-transformer';
+import * as sanitizeHtml from 'sanitize-html';
 
-type SignUpDto = {
+export class SignUpDto {
+  @IsEmail()
+  @Transform(({ value }) => sanitizeHtml(value))
   email: string;
+
+  @IsNotEmpty()
   password: string;
-};
+}
 
 @Controller('auth')
 export class AuthController {
