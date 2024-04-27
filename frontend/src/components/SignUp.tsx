@@ -1,4 +1,5 @@
 import { Box, Button, Input, Text } from "@chakra-ui/react";
+import axios from "axios";
 import { useState } from "react";
 
 const SignUp = () => {
@@ -16,9 +17,13 @@ const SignUp = () => {
   };
 
   const onSubmit = () => {
-    console.log("EMAIL:", email);
-    console.log("PASSWORD:", password);
+    axios
+      .post("http://localhost:3005/auth/sign-up", { email, password })
+      .then((response) => {
+        console.log(response);
+      });
   };
+  
   return (
     <Box>
       <Text textAlign="center" mb={4} fontSize={20}>
