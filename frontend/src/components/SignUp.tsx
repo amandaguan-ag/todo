@@ -72,7 +72,7 @@ const SignUp = () => {
       secondPassword !== password ||
       secondPassword === ""
     ) {
-      console.log("ERROR");
+      return;
     } else {
       axios
         .post("http://localhost:3005/auth/sign-up", { email, password })
@@ -102,7 +102,6 @@ const SignUp = () => {
           setSubmitClickEmail(false);
           setSubmitClickPassword(false);
           setSubmitClickSecondPassword(false);
-          console.log("ERROR ", error);
           toast({
             title: "Error.",
             description:
