@@ -6,9 +6,11 @@ import {
   FormLabel,
   Input,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const isInvalidEmail = (email: string) => {
   const emailFormat = /\S+@\S+\.\S+/;
@@ -28,6 +30,9 @@ const isInvalidPass2 = (pass1: string, pass2: string) => {
 };
 
 const SignUp = () => {
+  const navigate = useNavigate();
+  const toast = useToast();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [secondPassword, setSecondPassword] = useState("");
@@ -72,13 +77,23 @@ const SignUp = () => {
       axios
         .post("http://localhost:3005/auth/sign-up", { email, password })
         .then((response) => {
-          console.log(response);
+          const token = response.data;
+          localStorage.setItem("token", token);
           setEmail("");
           setPassword("");
           setSecondPassword("");
           setSubmitClickEmail(false);
           setSubmitClickPassword(false);
           setSubmitClickSecondPassword(false);
+
+          navigate("/home");
+          toast({
+            title: "Account created.",
+            description: "We've created your account for you.",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+          });
         });
     }
   };

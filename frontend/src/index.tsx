@@ -11,6 +11,7 @@ import {
 } from "react-router-dom";
 import SignUp from "./components/SignUp";
 import Login from "./components/Login";
+import Home from "./components/Home";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,18 @@ const router = createBrowserRouter([
       {
         path: "/log-in",
         element: <Login />,
+      },
+      {
+        path: "/home",
+        element: (
+          <Home
+            tasks={[]}
+            onTasksUpdated={function (): void {
+              throw new Error("Function not implemented.");
+            }}
+            userEmail={""}
+          />
+        ),
       },
     ],
   },
