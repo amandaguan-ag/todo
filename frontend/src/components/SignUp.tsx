@@ -1,29 +1,52 @@
-import { Box, Button, Input, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Input,
+  Text,
+} from "@chakra-ui/react";
 import axios from "axios";
 import { useState } from "react";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [submitClickEmail, setSubmitClickEmail] = useState(false);
+  const [submitClickPassword, setSubmitClickPassword] = useState(false);
+
+  const isErrorEmail = email === "" && submitClickEmail;
+  const isErrorPassword = password === "" && submitClickPassword;
 
   const onChangeEmail = (e: any) => {
-    console.log(e.target.value);
+    setSubmitClickEmail(false);
     setEmail(e.target.value);
   };
 
   const onChangePassword = (e: any) => {
-    console.log(e.target.value);
+    setSubmitClickPassword(false);
     setPassword(e.target.value);
   };
 
   const onSubmit = () => {
-    axios
-      .post("http://localhost:3005/auth/sign-up", { email, password })
-      .then((response) => {
-        console.log(response);
-      });
+    setSubmitClickEmail(true);
+    setSubmitClickPassword(true);
+    if (email === "" || password === "") {
+      console.log("ERROR");
+    } else {
+      axios
+        .post("http://localhost:3005/auth/sign-up", { email, password })
+        .then((response) => {
+          console.log(response);
+          setEmail("");
+          setPassword("");
+          setSubmitClickEmail(false);
+          setSubmitClickPassword(false);
+        });
+    }
   };
-  
+
   return (
     <Box>
       <Text textAlign="center" mb={4} fontSize={20}>
@@ -37,14 +60,28 @@ const SignUp = () => {
         margin="0 auto"
         gap={4}
       >
-        <Box display="flex" flexDirection="column" gap={2} w="100%">
-          <Text>Email:</Text>
-          <Input type="email" onChange={onChangeEmail} />
-        </Box>
-        <Box display="flex" flexDirection="column" gap={2} w="100%">
-          <Text>Password:</Text>
-          <Input type="password" onChange={onChangePassword} />
-        </Box>
+        <FormControl isInvalid={isErrorEmail} isRequired>
+          <FormLabel>Email</FormLabel>
+          <Input
+            type="email"
+            value={email ? email : ""}
+            onChange={onChangeEmail}
+          />
+          {!isErrorEmail ? null : (
+            <FormErrorMessage>Email is required.</FormErrorMessage>
+          )}
+        </FormControl>
+        <FormControl isInvalid={isErrorPassword} isRequired>
+          <FormLabel>Password</FormLabel>
+          <Input
+            type="password"
+            value={password ? password : ""}
+            onChange={onChangePassword}
+          />
+          {!isErrorPassword ? null : (
+            <FormErrorMessage>Password is required.</FormErrorMessage>
+          )}
+        </FormControl>
         <Button w="100%" onClick={onSubmit}>
           Submit
         </Button>
