@@ -10,14 +10,36 @@ import {
 import axios from "axios";
 import { useState } from "react";
 
+const isInvalidEmail = (email: string) => {
+  const emailFormat = /\S+@\S+\.\S+/;
+  if (email.match(emailFormat) && email.length > 0) {
+    return false;
+  } else {
+    return true;
+  }
+};
+
+const isInvalidPass2 = (pass1: string, pass2: string) => {
+  if (pass2 !== pass1) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
 const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [secondPassword, setSecondPassword] = useState("");
   const [submitClickEmail, setSubmitClickEmail] = useState(false);
   const [submitClickPassword, setSubmitClickPassword] = useState(false);
+  const [submitClickSecondPassword, setSubmitClickSecondPassword] =
+    useState(false);
 
-  const isErrorEmail = email === "" && submitClickEmail;
+  const isErrorEmail = isInvalidEmail(email) && submitClickEmail;
   const isErrorPassword = password === "" && submitClickPassword;
+  const isErrorSecondPassword =
+    isInvalidPass2(password, secondPassword) && submitClickSecondPassword;
 
   const onChangeEmail = (e: any) => {
     setSubmitClickEmail(false);
@@ -29,10 +51,22 @@ const SignUp = () => {
     setPassword(e.target.value);
   };
 
+  const onChangeSecondPassword = (e: any) => {
+    setSubmitClickSecondPassword(false);
+    setSecondPassword(e.target.value);
+  };
+
   const onSubmit = () => {
     setSubmitClickEmail(true);
     setSubmitClickPassword(true);
-    if (email === "" || password === "") {
+    setSubmitClickSecondPassword(true);
+
+    if (
+      isInvalidEmail(email) ||
+      password === "" ||
+      secondPassword !== password ||
+      secondPassword === ""
+    ) {
       console.log("ERROR");
     } else {
       axios
@@ -41,8 +75,10 @@ const SignUp = () => {
           console.log(response);
           setEmail("");
           setPassword("");
+          setSecondPassword("");
           setSubmitClickEmail(false);
           setSubmitClickPassword(false);
+          setSubmitClickSecondPassword(false);
         });
     }
   };
@@ -80,6 +116,17 @@ const SignUp = () => {
           />
           {!isErrorPassword ? null : (
             <FormErrorMessage>Password is required.</FormErrorMessage>
+          )}
+        </FormControl>
+        <FormControl isInvalid={isErrorSecondPassword} isRequired>
+          <FormLabel>Enter Password Again</FormLabel>
+          <Input
+            type="password"
+            value={secondPassword}
+            onChange={onChangeSecondPassword}
+          />
+          {!isErrorSecondPassword ? null : (
+            <FormErrorMessage>Password must match.</FormErrorMessage>
           )}
         </FormControl>
         <Button w="100%" onClick={onSubmit}>
