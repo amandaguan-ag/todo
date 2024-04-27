@@ -94,6 +94,23 @@ const SignUp = () => {
             duration: 3000,
             isClosable: true,
           });
+        })
+        .catch((error) => {
+          setEmail("");
+          setPassword("");
+          setSecondPassword("");
+          setSubmitClickEmail(false);
+          setSubmitClickPassword(false);
+          setSubmitClickSecondPassword(false);
+          console.log("ERROR ", error);
+          toast({
+            title: "Error.",
+            description:
+              "We are not able to create your account. Please try again.",
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+          });
         });
     }
   };

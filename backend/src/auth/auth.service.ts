@@ -1,21 +1,40 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
+import { Sign } from 'crypto';
+import { SignUpDto } from './auth.controller';
 
 @Injectable()
 export class AuthService {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private jwtService: JwtService,
+  ) {}
 
   async hashPassword(password: string) {
     const saltRounds = 10;
     return await bcrypt.hash(password, saltRounds);
   }
 
-  async signUp(signUpDto) {
+  async createAccessToken(user) {
+    const payload = { sub: user.userId, username: user.username };
+    return await this.jwtService.signAsync(payload);
+  }
+
+  async signUp(signUpDto: SignUpDto) {
     //check if email already exists
+    const emailExits =
+      (await this.usersService.findUserByEmail(signUpDto.email)).length > 0;
+
+    if (emailExits) {
+      throw new BadRequestException('Email already exists');
+    }
     const hashedPassword = await this.hashPassword(signUpDto.password);
     signUpDto.password = hashedPassword;
-    this.usersService.createUser(signUpDto);
-    return 'fake token';
+    const user = this.usersService.createUser(signUpDto);
+    console.log('USER ', user);
+
+    return await this.createAccessToken(user);
   }
 }
