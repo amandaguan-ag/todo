@@ -9,6 +9,7 @@ import typeorm from './config/typeorm';
 import { ScheduleModule } from '@nestjs/schedule';
 import { NotificationService } from './notification.service';
 import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { AuthModule } from './auth/auth.module';
     }),
     TypeOrmModule.forFeature([Task, Tag]),
     AuthModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService, NotificationService],
