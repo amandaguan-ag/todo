@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
@@ -23,23 +27,48 @@ export class AuthService {
   }
 
   async signUp(signUpDto: SignUpDto) {
-    //check if email already exists
-    const emailExits =
-      (await this.usersService.findUserByEmail(signUpDto.email)).length > 0;
+    const emailExits = (
+      await this.usersService.findUserByEmail(signUpDto.email)
+    )?.email;
 
     if (emailExits) {
       throw new BadRequestException('Email already exists');
     }
+
     const hashedPassword = await this.hashPassword(signUpDto.password);
     signUpDto.password = hashedPassword;
+
     const user = this.usersService.createUser(signUpDto);
-    console.log('USER ', user);
 
     return await this.createAccessToken(user);
   }
 
+  async verifyPassword(enteredPassword: string, exisitingPassword: string) {
+    return await bcrypt.compare(enteredPassword, exisitingPassword);
+  }
+
   async logIn(logInDto: LogInDto) {
-    console.log('LOG IN DTO:', logInDto);
-    return 'fake-token';
+    // check user exist
+    const user = await this.usersService.findUserByEmail(logInDto.email);
+    console.log('USER ', !user);
+
+    //if not exist, throw unatuthozed erroe
+    if (!user) {
+      throw new UnauthorizedException('username does not exist');
+    }
+
+    // verify that password match
+    const passwordMatch = await this.verifyPassword(
+      logInDto.password,
+      user.password,
+    );
+
+    //if password not macth, throw unatuthozed erroe
+    if (!passwordMatch) {
+      throw new UnauthorizedException('incorrect password');
+    }
+
+    //create and retunrn access token
+    return await this.createAccessToken(user);
   }
 }

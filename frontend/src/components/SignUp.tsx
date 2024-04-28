@@ -96,6 +96,7 @@ const SignUp = () => {
           });
         })
         .catch((error) => {
+          console.log("Error: ", error);
           setEmail("");
           setPassword("");
           setSecondPassword("");
