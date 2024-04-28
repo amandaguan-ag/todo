@@ -11,6 +11,18 @@ import {
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
+import { Task } from  "../types/Task";
+
+interface OutletContext {
+  userEmail: string;
+  tasks: Task[];
+  onLoginSuccess: (email: string) => void;
+}
+
+interface LoginProps {
+  onLoginSuccess: (email: string) => void;
+}
 
 const isInvalidEmail = (email: string) => {
   const emailFormat = /\S+@\S+\.\S+/;
@@ -22,6 +34,7 @@ const isInvalidEmail = (email: string) => {
 };
 
 const Login = () => {
+  const { onLoginSuccess } = useOutletContext<OutletContext>();
   const navigate = useNavigate();
   const toast = useToast();
 
@@ -59,7 +72,7 @@ const Login = () => {
           setSubmitClickEmail(false);
           setSubmitClickPassword(false);
 
-          navigate("/home");
+          navigate("/home"); 
           toast({
             title: "Account created.",
             description: "Welcome back.",
@@ -67,6 +80,8 @@ const Login = () => {
             duration: 3000,
             isClosable: true,
           });
+
+          onLoginSuccess(email);
         })
         .catch((error) => {
           console.log("Error: ", error);
@@ -77,7 +92,7 @@ const Login = () => {
           toast({
             title: "Error.",
             description:
-              "There was an error loggin you into your account. Please try again.",
+              "There was an error logging you into your account. Please try again.",
             status: "error",
             duration: 3000,
             isClosable: true,
