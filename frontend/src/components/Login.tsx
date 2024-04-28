@@ -12,7 +12,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useOutletContext } from "react-router-dom";
-import { Task } from  "../types/Task";
+import { Task } from "../types/Task";
 
 interface OutletContext {
   userEmail: string;
@@ -72,7 +72,7 @@ const Login = () => {
           setSubmitClickEmail(false);
           setSubmitClickPassword(false);
 
-          navigate("/home"); 
+          navigate("/home");
           toast({
             title: "Account created.",
             description: "Welcome back.",
@@ -137,7 +137,15 @@ const Login = () => {
           )}
         </FormControl>
         <Button w="100%" onClick={onSubmit}>
-          Submit
+          Log In
+        </Button>
+        <Button
+          w="100%"
+          mt={4}
+          colorScheme="blue"
+          onClick={() => navigate("/sign-up")}
+        >
+          Sign Up
         </Button>
       </Box>
     </Box>
