@@ -20,6 +20,7 @@ if (rootElement) {
           <Routes>
             <Route path="/" element={<App />}>
               <Route index element={<Login />} />
+              <Route path="log-in" element={<Login />} />
               <Route path="sign-up" element={<SignUp />} />
               <Route path="home" element={<Home tasks={[]} onTasksUpdated={function (): void {
                 throw new Error("Function not implemented.");
