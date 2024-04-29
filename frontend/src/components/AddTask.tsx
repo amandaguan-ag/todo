@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   Input,
@@ -22,11 +22,20 @@ const AddTask: React.FC<{ onTasksUpdated: () => void; userEmail: string }> = ({
     description: "",
     priority: "",
     tagNames: [] as string[],
-    userEmail,
+    userEmail: userEmail || "", // Fallback to empty string if undefined
     submitted: false,
   });
 
   const toast = useToast();
+
+useEffect(() => {
+  if (userEmail) {
+    setFormState((prevState) => ({
+      ...prevState,
+      userEmail: userEmail,
+    }));
+  }
+}, [userEmail]);
 
   const handleInputChange = (
     e:
@@ -43,12 +52,11 @@ const AddTask: React.FC<{ onTasksUpdated: () => void; userEmail: string }> = ({
 
   const handleAddTask = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setFormState((prev) => ({ ...prev, submitted: true }));
-
-    if (!formState.description || !formState.priority) {
+    console.log("Attempting to add task with userEmail:", formState.userEmail); // Log userEmail being used in the request
+    if (!formState.userEmail) {
       toast({
-        title: "Validation Error",
-        description: "Please ensure all fields are filled out correctly.",
+        title: "User Error",
+        description: "User email is not available. Please log in again.",
         status: "error",
         duration: 9000,
         isClosable: true,
@@ -96,7 +104,6 @@ const AddTask: React.FC<{ onTasksUpdated: () => void; userEmail: string }> = ({
           Add Task
         </Heading>
         <HStack spacing={4} align="flex-end">
-
           <FormControl
             isInvalid={formState.submitted && !formState.description.trim()}
             flex={2}
@@ -143,7 +150,7 @@ const AddTask: React.FC<{ onTasksUpdated: () => void; userEmail: string }> = ({
             <Select
               id="tag"
               name="tag"
-              value={formState.tagNames[0] || ""} 
+              value={formState.tagNames[0] || ""}
               onChange={handleInputChange}
               placeholder="Select tag"
             >

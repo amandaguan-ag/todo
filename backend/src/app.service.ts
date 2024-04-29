@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './task.entity';
 import { Tag } from './tag.entity';
+import { User } from './user.entity'; // Ensure you have a User entity
 import { Repository } from 'typeorm';
-import { HttpException, HttpStatus } from '@nestjs/common';
 
 @Injectable()
 export class AppService {
@@ -12,45 +12,52 @@ export class AppService {
     private taskRepository: Repository<Task>,
     @InjectRepository(Tag)
     private tagRepository: Repository<Tag>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>, // Inject UserRepository
   ) {}
+
+  async createOrFindTags(tagNames: string[]): Promise<Tag[]> {
+    return Promise.all(
+      tagNames.map(async (name) => {
+        let tag = await this.tagRepository.findOne({ where: { name } });
+        if (!tag) {
+          tag = this.tagRepository.create({ name });
+          await this.tagRepository.save(tag);
+        }
+        return tag;
+      }),
+    );
+  }
 
   async addTask(taskData: {
     description: string;
     priority: string;
     tagNames: string[];
-    userEmail: string; 
-  }) {
-    try {
-      const tags = await Promise.all(
-        taskData.tagNames.map(async (name) => {
-          let tag = await this.tagRepository.findOne({ where: { name } });
-          if (!tag) {
-            tag = this.tagRepository.create({ name });
-            await this.tagRepository.save(tag);
-          }
-          return tag;
-        }),
-      );
-
-      const dueDate = new Date();
-      dueDate.setDate(dueDate.getDate() + 7);
-
-      const newTask = this.taskRepository.create({
-        ...taskData,
-        dueDate,
-        tags,
-      });
-      await this.taskRepository.save(newTask);
-      return await this.getTasks();
-    } catch (error) {
-      console.error(error);
-      throw new HttpException(
-        error.message || 'Failed to create task',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+    userEmail: string;
+  }): Promise<Task> {
+    // Find the user by email
+    const user = await this.userRepository.findOne({
+      where: { email: taskData.userEmail },
+    });
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
     }
-  }
 
+    const tags = await this.createOrFindTags(taskData.tagNames);
+
+    const dueDate = new Date();
+    dueDate.setDate(dueDate.getDate() + 7);
+
+    const newTask = this.taskRepository.create({
+      ...taskData,
+      dueDate,
+      tags,
+      user: user, // Associate task with user
+    });
+
+    await this.taskRepository.save(newTask);
+    return newTask;
+  }
   async getTasks() {
     return await this.taskRepository.find({ relations: ['tags'] });
   }

@@ -44,7 +44,10 @@ const handleError = (error: any) => {
 export const fetchTasks = () => makeApiRequest("/tasks", "GET");
 
 export const addTask = (taskData: TaskData) =>
-  makeApiRequest("/task", "POST", taskData);
+  makeApiRequest("/task", "POST", {
+    ...taskData,
+    tagNames: taskData.tagNames || [],
+  });
 
 export const updateTaskDescription = (taskId: number, description: string) =>
   makeApiRequest(`/task/${taskId}/description`, "PATCH", { description });

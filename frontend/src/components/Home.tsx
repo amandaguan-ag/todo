@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
   Flex,
@@ -13,21 +13,22 @@ import {
 } from "@chakra-ui/react";
 import TaskList from "./TaskList";
 import AddTask from "./AddTask";
-import { Task } from "../types/Task";
+import { Task } from "../types/Task"; // Ensure this type is correctly defined in your types folder
 import { Legend } from "./Legend";
 import { useNavigate } from "react-router-dom";
-import useAuth from '../hooks/useAuth'; 
-
-const availableTags = ["Work", "Study", "Personal"];
+import useAuth from "../hooks/useAuth";
+import { UserContext } from "../contexts/UserContext";
+import { useUser } from "../contexts/UserContext";
 
 interface HomeProps {
   tasks: Task[];
   onTasksUpdated: () => void;
-  userEmail: string;
 }
 
-const Home: React.FC<HomeProps> = ({ tasks, onTasksUpdated, userEmail }) => {
-  useAuth(); 
+const Home: React.FC<HomeProps> = ({ tasks, onTasksUpdated }) => {
+  const userContext = useUser(); // Using the custom hook for context
+  useAuth();
+  console.log("Logged-in user email:", userContext?.userEmail);
   const navigate = useNavigate();
 
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -39,12 +40,13 @@ const Home: React.FC<HomeProps> = ({ tasks, onTasksUpdated, userEmail }) => {
   >([]);
 
   useEffect(() => {
-    const filterTasksByTags = (taskList: Task[]) =>
-      selectedTags.length > 0
+    const filterTasksByTags = (taskList: Task[]) => {
+      return selectedTags.length > 0
         ? taskList.filter((task) =>
             task.tags.some((tag) => selectedTags.includes(tag.name))
           )
         : taskList;
+    };
 
     setFilteredCompletedTasks(
       filterTasksByTags(tasks.filter((task) => task.completed))
@@ -71,7 +73,10 @@ const Home: React.FC<HomeProps> = ({ tasks, onTasksUpdated, userEmail }) => {
         Task Manager
       </Heading>
       <Button onClick={handleLogout}>Logout</Button>
-      <AddTask onTasksUpdated={onTasksUpdated} userEmail={userEmail} />;
+      <AddTask
+        onTasksUpdated={onTasksUpdated}
+        userEmail={userContext?.userEmail ?? ""}
+      />
       <Container
         centerContent
         p={4}
@@ -91,7 +96,7 @@ const Home: React.FC<HomeProps> = ({ tasks, onTasksUpdated, userEmail }) => {
       </Container>
       <Legend />
       <Stack direction="row">
-        {availableTags.map((tag) => (
+        {["Work", "Study", "Personal"].map((tag) => (
           <Checkbox
             key={tag}
             isChecked={selectedTags.includes(tag)}

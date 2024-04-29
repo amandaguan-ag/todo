@@ -4,6 +4,7 @@ import { Outlet } from "react-router-dom";
 import { Task } from "./types/Task";
 import { fetchTasks } from "./api/tasksApi";
 import { sortTasks } from "./utils/taskUtils";
+import { UserProvider } from "./contexts/UserContext";
 
 const App: React.FC = () => {
   const [userEmail, setUserEmail] = useState("");
@@ -26,9 +27,15 @@ const App: React.FC = () => {
 
   return (
     <ChakraProvider>
-      <Outlet
-        context={{ userEmail, tasks, onLoginSuccess: handleUserDetailsSubmit }}
-      />
+      <UserProvider>
+        <Outlet
+          context={{
+            userEmail,
+            tasks,
+            onLoginSuccess: handleUserDetailsSubmit,
+          }}
+        />
+      </UserProvider>
     </ChakraProvider>
   );
 };

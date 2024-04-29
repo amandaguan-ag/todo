@@ -24,7 +24,7 @@ if (rootElement) {
               <Route path="sign-up" element={<SignUp />} />
               <Route path="home" element={<Home tasks={[]} onTasksUpdated={function (): void {
                 throw new Error("Function not implemented.");
-              } } userEmail={""} />} />
+              } }  />} />
             </Route>
           </Routes>
         </ChakraProvider>
