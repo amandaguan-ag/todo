@@ -16,6 +16,7 @@ import AddTask from "./AddTask";
 import { Task } from "../types/Task";
 import { Legend } from "./Legend";
 import { useNavigate } from "react-router-dom";
+import useAuth from '../hooks/useAuth'; 
 
 const availableTags = ["Work", "Study", "Personal"];
 
@@ -26,6 +27,7 @@ interface HomeProps {
 }
 
 const Home: React.FC<HomeProps> = ({ tasks, onTasksUpdated, userEmail }) => {
+  useAuth(); 
   const navigate = useNavigate();
 
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -68,9 +70,7 @@ const Home: React.FC<HomeProps> = ({ tasks, onTasksUpdated, userEmail }) => {
       <Heading as="h1" size="xl" textAlign="center" my={6}>
         Task Manager
       </Heading>
-      <Button onClick={handleLogout}>
-        Logout
-      </Button>
+      <Button onClick={handleLogout}>Logout</Button>
       <AddTask onTasksUpdated={onTasksUpdated} userEmail={userEmail} />;
       <Container
         centerContent
