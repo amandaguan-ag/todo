@@ -69,7 +69,7 @@ export class NotificationService {
     });
   }
 
-  @Cron('45 14 * * *')
+  @Cron('54 17 * * *')
   async handleCron() {
     const sevenDaysFromNow = new Date();
     sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);
@@ -79,12 +79,12 @@ export class NotificationService {
         dueDate: LessThan(sevenDaysFromNow),
         completed: false,
       },
-      relations: ['user'], // Ensure you are loading the user relation
+      relations: ['user'],
     });
 
     const tasksByEmail: Record<string, Task[]> = tasksDueSoon.reduce(
       (acc, task) => {
-        const userEmail = task.user.email; // Adjusted to correctly reference user's email
+        const userEmail = task.user.email;
         if (!acc[userEmail]) {
           acc[userEmail] = [];
         }
