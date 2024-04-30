@@ -1,18 +1,16 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState } from "react";
 
-// Define UserContextType only once
 interface UserContextType {
   userEmail: string;
   setUserEmail: (email: string) => void;
 }
 
-// Create the context with a default value of undefined or appropriate default state
 export const UserContext = createContext<UserContextType | undefined>(
   undefined
 );
 
 interface UserProviderProps {
-  children: ReactNode;
+  children: React.ReactNode; 
 }
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
@@ -25,5 +23,10 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   );
 };
 
-// Custom hook to use the UserContext
-export const useUser = () => useContext(UserContext);
+export const useUser = () => {
+  const context = useContext(UserContext);
+  if (context === undefined) {
+    throw new Error("useUser must be used within a UserProvider");
+  }
+  return context;
+};

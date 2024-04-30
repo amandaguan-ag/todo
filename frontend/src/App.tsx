@@ -7,8 +7,16 @@ import { sortTasks } from "./utils/taskUtils";
 import { UserProvider } from "./contexts/UserContext";
 
 const App: React.FC = () => {
-  const [userEmail, setUserEmail] = useState("");
   const [tasks, setTasks] = useState<Task[]>([]);
+
+  const onTasksUpdated = async () => {
+    try {
+      const updatedTasks = await fetchTasks();
+      setTasks(updatedTasks);
+    } catch (error) {
+      console.error("Failed to update tasks:", error);
+    }
+  };
 
   useEffect(() => {
     fetchTasks()
@@ -21,18 +29,13 @@ const App: React.FC = () => {
       });
   }, []);
 
-  const handleUserDetailsSubmit = (email: string) => {
-    setUserEmail(email);
-  };
-
   return (
     <ChakraProvider>
       <UserProvider>
         <Outlet
           context={{
-            userEmail,
             tasks,
-            onLoginSuccess: handleUserDetailsSubmit,
+            onTasksUpdated,
           }}
         />
       </UserProvider>

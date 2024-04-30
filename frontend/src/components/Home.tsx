@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Box,
   Flex,
@@ -13,9 +13,9 @@ import {
 } from "@chakra-ui/react";
 import TaskList from "./TaskList";
 import AddTask from "./AddTask";
-import { Task } from "../types/Task"; // Ensure this type is correctly defined in your types folder
+import { Task } from "../types/Task";
 import { Legend } from "./Legend";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import { UserContext } from "../contexts/UserContext";
 import { useUser } from "../contexts/UserContext";
@@ -25,7 +25,11 @@ interface HomeProps {
   onTasksUpdated: () => void;
 }
 
-const Home: React.FC<HomeProps> = ({ tasks, onTasksUpdated }) => {
+const Home: React.FC = () => {
+  const { tasks, onTasksUpdated } = useOutletContext<{
+    tasks: Task[];
+    onTasksUpdated: () => void;
+  }>();
   const userContext = useUser(); // Using the custom hook for context
   useAuth();
   console.log("Logged-in user email:", userContext?.userEmail);

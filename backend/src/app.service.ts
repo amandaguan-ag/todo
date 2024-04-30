@@ -13,7 +13,7 @@ export class AppService {
     @InjectRepository(Tag)
     private tagRepository: Repository<Tag>,
     @InjectRepository(User)
-    private userRepository: Repository<User>, // Inject UserRepository
+    private userRepository: Repository<User>,
   ) {}
 
   async createOrFindTags(tagNames: string[]): Promise<Tag[]> {
@@ -35,7 +35,6 @@ export class AppService {
     tagNames: string[];
     userEmail: string;
   }): Promise<Task> {
-    // Find the user by email
     const user = await this.userRepository.findOne({
       where: { email: taskData.userEmail },
     });
@@ -46,18 +45,26 @@ export class AppService {
     const tags = await this.createOrFindTags(taskData.tagNames);
 
     const dueDate = new Date();
-    dueDate.setDate(dueDate.getDate() + 7);
+    dueDate.setDate(dueDate.getDate() + 7); 
 
     const newTask = this.taskRepository.create({
       ...taskData,
-      dueDate,
-      tags,
-      user: user, // Associate task with user
+      dueDate: dueDate, 
+      tags: tags,
+      user: user,
     });
 
-    await this.taskRepository.save(newTask);
-    return newTask;
+    try {
+      await this.taskRepository.save(newTask);
+      return newTask;
+    } catch (error) {
+      throw new HttpException(
+        'Failed to save task: ' + error.message,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
+
   async getTasks() {
     return await this.taskRepository.find({ relations: ['tags'] });
   }

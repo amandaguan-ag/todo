@@ -22,20 +22,20 @@ const AddTask: React.FC<{ onTasksUpdated: () => void; userEmail: string }> = ({
     description: "",
     priority: "",
     tagNames: [] as string[],
-    userEmail: userEmail || "", // Fallback to empty string if undefined
+    userEmail: userEmail || "", 
     submitted: false,
   });
 
   const toast = useToast();
 
-useEffect(() => {
-  if (userEmail) {
-    setFormState((prevState) => ({
-      ...prevState,
-      userEmail: userEmail,
-    }));
-  }
-}, [userEmail]);
+  useEffect(() => {
+    if (userEmail) {
+      setFormState((prevState) => ({
+        ...prevState,
+        userEmail: userEmail,
+      }));
+    }
+  }, [userEmail]);
 
   const handleInputChange = (
     e:
@@ -52,7 +52,6 @@ useEffect(() => {
 
   const handleAddTask = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Attempting to add task with userEmail:", formState.userEmail); // Log userEmail being used in the request
     if (!formState.userEmail) {
       toast({
         title: "User Error",
@@ -76,7 +75,7 @@ useEffect(() => {
         description: "",
         priority: "",
         tagNames: [],
-        userEmail,
+        userEmail: formState.userEmail,
         submitted: false,
       });
       toast({
@@ -87,9 +86,14 @@ useEffect(() => {
         isClosable: true,
       });
     } catch (error: any) {
+      console.error("Error while adding task:", error);
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to save task: Something went wrong";
       toast({
         title: "Error Adding Task",
-        description: error?.message || "Something went wrong",
+        description: errorMessage,
         status: "error",
         duration: 5000,
         isClosable: true,

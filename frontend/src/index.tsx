@@ -9,6 +9,7 @@ import SignUp from "./components/SignUp";
 import Home from "./components/Home";
 import reportWebVitals from "./reportWebVitals";
 import reportAccessibility from "./utils/reportAccessibility";
+import { UserProvider } from "./contexts/UserContext";
 
 const rootElement = document.getElementById("root");
 if (rootElement) {
@@ -17,16 +18,16 @@ if (rootElement) {
     <React.StrictMode>
       <BrowserRouter>
         <ChakraProvider>
-          <Routes>
-            <Route path="/" element={<App />}>
-              <Route index element={<Login />} />
-              <Route path="log-in" element={<Login />} />
-              <Route path="sign-up" element={<SignUp />} />
-              <Route path="home" element={<Home tasks={[]} onTasksUpdated={function (): void {
-                throw new Error("Function not implemented.");
-              } }  />} />
-            </Route>
-          </Routes>
+          <UserProvider>
+            <Routes>
+              <Route path="/" element={<App />}>
+                <Route index element={<Login />} />
+                <Route path="log-in" element={<Login />} />
+                <Route path="sign-up" element={<SignUp />} />
+                <Route path="home" element={<Home />} />
+              </Route>
+            </Routes>
+          </UserProvider>
         </ChakraProvider>
       </BrowserRouter>
     </React.StrictMode>
