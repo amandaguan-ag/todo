@@ -1,36 +1,26 @@
 import React from "react";
-import ReactDOM from "react-dom/client";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ReactDOM from "react-dom";
+import { BrowserRouter } from "react-router-dom";
 import { ChakraProvider } from "@chakra-ui/react";
 import "./index.css";
-import App from "./App";
-import Login from "./components/Login";
-import SignUp from "./components/SignUp";
-import Home from "./components/Home";
+import AppRoutes from "./components/routes";
 import reportWebVitals from "./reportWebVitals";
 import reportAccessibility from "./utils/reportAccessibility";
 import { UserProvider } from "./contexts/UserContext";
 
 const rootElement = document.getElementById("root");
 if (rootElement) {
-  const root = ReactDOM.createRoot(rootElement);
-  root.render(
+  ReactDOM.render(
     <React.StrictMode>
       <BrowserRouter>
         <ChakraProvider>
           <UserProvider>
-            <Routes>
-              <Route path="/" element={<App />}>
-                <Route index element={<Login />} />
-                <Route path="log-in" element={<Login />} />
-                <Route path="sign-up" element={<SignUp />} />
-                <Route path="home" element={<Home />} />
-              </Route>
-            </Routes>
+            <AppRoutes />
           </UserProvider>
         </ChakraProvider>
       </BrowserRouter>
-    </React.StrictMode>
+    </React.StrictMode>,
+    rootElement
   );
 } else {
   console.error("Root element not found.");
