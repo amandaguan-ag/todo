@@ -56,7 +56,7 @@ export class NotificationService {
       from: '"Task Manager" <your-email@example.com>',
       to: userEmail,
       subject: 'Upcoming Due Tasks',
-      html: emailHtml, 
+      html: emailHtml,
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
@@ -69,7 +69,7 @@ export class NotificationService {
     });
   }
 
-  @Cron('45 14 * * *')
+  @Cron('54 17 * * *')
   async handleCron() {
     const sevenDaysFromNow = new Date();
     sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);
@@ -79,16 +79,12 @@ export class NotificationService {
         dueDate: LessThan(sevenDaysFromNow),
         completed: false,
       },
+      relations: ['user'],
     });
-
-    if (tasksDueSoon.length === 0) {
-      console.error('No upcoming tasks found.');
-      return;
-    }
 
     const tasksByEmail: Record<string, Task[]> = tasksDueSoon.reduce(
       (acc, task) => {
-        const userEmail = task.userEmail;
+        const userEmail = task.user.email;
         if (!acc[userEmail]) {
           acc[userEmail] = [];
         }

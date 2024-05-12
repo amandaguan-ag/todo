@@ -7,5 +7,5 @@ export interface Task {
   priority: "High" | "Medium" | "Low";
   createdAt: string;
   tags: Tag[];
-  userEmail: string; 
+  userEmail: string;
 }

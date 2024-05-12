@@ -1,58 +1,44 @@
-import { useState, useEffect } from "react";
-import { ChakraProvider, Box } from "@chakra-ui/react";
-import Home from "./components/Home";
-import EntryForm from "./components/EntryForm";
+import React, { useEffect, useState } from "react";
+import { ChakraProvider } from "@chakra-ui/react";
+import { Outlet } from "react-router-dom";
 import { Task } from "./types/Task";
 import { fetchTasks } from "./api/tasksApi";
 import { sortTasks } from "./utils/taskUtils";
+import { UserProvider } from "./contexts/UserContext";
 
 const App: React.FC = () => {
-  const [userDetailsEntered, setUserDetailsEntered] = useState(false);
-  const [userEmail, setUserEmail] = useState("");
   const [tasks, setTasks] = useState<Task[]>([]);
 
-  useEffect(() => {
-    const loadTasks = async () => {
-      try {
-        const fetchedTasks = await fetchTasks();
-        const sortedTasks = sortTasks(fetchedTasks);
-        setTasks(sortedTasks);
-      } catch (error) {
-        console.error("Failed to fetch tasks:", error);
-      }
-    };
-
-    loadTasks();
-  }, []);
-
-  const handleUserDetailsSubmit = (name: string, email: string) => {
-    setUserEmail(email);
-    setUserDetailsEntered(true);
-  };
-
-  const handleTasksUpdated = async () => {
+  const onTasksUpdated = async () => {
     try {
-      const fetchedTasks = await fetchTasks();
-      const sortedTasks = sortTasks(fetchedTasks);
-      setTasks(sortedTasks);
+      const updatedTasks = await fetchTasks();
+      setTasks(updatedTasks);
     } catch (error) {
-      console.error("Failed to fetch updated tasks:", error);
+      console.error("Failed to update tasks:", error);
     }
   };
 
+  useEffect(() => {
+    fetchTasks()
+      .then((fetchedTasks) => {
+        const sortedTasks = sortTasks(fetchedTasks);
+        setTasks(sortedTasks);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch tasks:", error);
+      });
+  }, []);
+
   return (
     <ChakraProvider>
-      {!userDetailsEntered ? (
-        <EntryForm onEnter={handleUserDetailsSubmit} />
-      ) : (
-        <Box m={10}>
-          <Home
-            tasks={tasks}
-            userEmail={userEmail}
-            onTasksUpdated={handleTasksUpdated}
-          />
-        </Box>
-      )}
+      <UserProvider>
+        <Outlet
+          context={{
+            tasks,
+            onTasksUpdated,
+          }}
+        />
+      </UserProvider>
     </ChakraProvider>
   );
 };
