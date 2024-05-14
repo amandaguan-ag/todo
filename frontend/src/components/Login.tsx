@@ -20,10 +20,6 @@ interface OutletContext {
   onLoginSuccess: (email: string) => void;
 }
 
-interface LoginProps {
-  onLoginSuccess: (email: string) => void;
-}
-
 const isInvalidEmail = (email: string) => {
   const emailFormat = /\S+@\S+\.\S+/;
   if (email.match(emailFormat) && email.length > 0) {
