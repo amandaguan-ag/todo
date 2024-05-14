@@ -4,12 +4,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, LessThan } from 'typeorm';
 import { Task } from './task.entity';
 import * as nodemailer from 'nodemailer';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class NotificationService {
   constructor(
     @InjectRepository(Task)
     private taskRepository: Repository<Task>,
+    private configService: ConfigService,
   ) {}
 
   private async sendEmail(userEmail: string, tasks: Task[]) {
@@ -19,8 +21,8 @@ export class NotificationService {
       port: 465,
       secure: true,
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        user: this.configService.get('EMAIL_USER'),
+        pass: this.configService.get('EMAIL_PASS'),
       },
     });
 
