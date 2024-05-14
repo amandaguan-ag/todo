@@ -17,9 +17,8 @@ import { Task } from "../types/Task";
 import { Legend } from "./Legend";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
+import { UserContext } from "../contexts/UserContext";
 import { useUser } from "../contexts/UserContext";
-import TagSelector from "./TagSelector";
-import useFilteredTasks from "../hooks/useFilteredTasks";
 
 interface HomeProps {
   tasks: Task[];
@@ -102,10 +101,13 @@ const Home: React.FC = () => {
       <Legend />
       <Stack direction="row">
         {["Work", "Study", "Personal"].map((tag) => (
-          <TagSelector
-            selectedTags={selectedTags}
-            onTagChange={handleTagChange}
-          />
+          <Checkbox
+            key={tag}
+            isChecked={selectedTags.includes(tag)}
+            onChange={(e) => handleTagChange(tag, e.target.checked)}
+          >
+            {tag}
+          </Checkbox>
         ))}
       </Stack>
       <Flex
