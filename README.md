@@ -65,6 +65,7 @@ EMAIL_PASS=<Your_Email_Password>
 Run the following command to perform the initial migration which will create the `Todo` table in your database.
 
 ```sh
+npm run build
 npm run migration:run    
 ```
 
