@@ -7,7 +7,7 @@ import { useUser } from "../contexts/UserContext";
 
 const MyApp: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const { userEmail } = useUser(); 
+  const { userEmail } = useUser();
 
   const onTasksUpdated = async () => {
     try {
@@ -20,7 +20,6 @@ const MyApp: React.FC = () => {
 
   useEffect(() => {
     if (userEmail) {
-
       fetchTasks(userEmail)
         .then((fetchedTasks) => {
           const sortedTasks = sortTasks(fetchedTasks);
