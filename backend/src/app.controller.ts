@@ -8,6 +8,7 @@ import {
   Delete,
   HttpException,
   HttpStatus,
+  Query
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { NotificationService } from './notification.service';
@@ -20,13 +21,16 @@ export class AppController {
   ) {}
 
   @Post('/task')
-  async addTask(@Body() body: {
-    description: string;
-    priority: string;
-    tagNames: string[];
-    userEmail: string;
-  }) {
-    console.log("Received task data:", body);  // Confirm what is received
+  async addTask(
+    @Body()
+    body: {
+      description: string;
+      priority: string;
+      tagNames: string[];
+      userEmail: string;
+    },
+  ) {
+    console.log('Received task data:', body);
     if (!body.userEmail) {
       throw new HttpException('User email is required', HttpStatus.BAD_REQUEST);
     }
@@ -34,8 +38,11 @@ export class AppController {
   }
 
   @Get('/tasks')
-  getTasks() {
-    return this.appService.getTasks();
+  getTasks(@Query('userEmail') userEmail: string) {
+    if (!userEmail) {
+      throw new HttpException('User email is required', HttpStatus.BAD_REQUEST);
+    }
+    return this.appService.getTasks(userEmail);
   }
 
   @Patch('/task/:id/completion')

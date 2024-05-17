@@ -24,7 +24,7 @@ const Home: React.FC = () => {
     tasks: Task[];
     onTasksUpdated: () => void;
   }>();
-  const userContext = useUser(); // Using the custom hook for context
+  const userContext = useUser(); 
   useAuth();
   console.log("Logged-in user email:", userContext?.userEmail);
   const navigate = useNavigate();

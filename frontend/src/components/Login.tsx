@@ -85,14 +85,6 @@ const Login = () => {
           setPassword("");
           setSubmitClickEmail(false);
           setSubmitClickPassword(false);
-          // toast({
-          //   title: "Error.",
-          //   description:
-          //     "There was an error logging you into your account. Please try again.",
-          //   status: "error",
-          //   duration: 3000,
-          //   isClosable: true,
-          // });
         });
     }
   };

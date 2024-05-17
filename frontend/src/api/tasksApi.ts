@@ -41,7 +41,8 @@ const handleError = (error: any) => {
   throw error;
 };
 
-export const fetchTasks = () => makeApiRequest("/tasks", "GET");
+export const fetchTasks = (userEmail: string) =>
+  makeApiRequest(`/tasks?userEmail=${encodeURIComponent(userEmail)}`, "GET");
 
 export const addTask = (taskData: TaskData) =>
   makeApiRequest("/task", "POST", {

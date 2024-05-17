@@ -2,7 +2,7 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './task.entity';
 import { Tag } from './tag.entity';
-import { User } from './user.entity'; // Ensure you have a User entity
+import { User } from './user.entity'; 
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -45,11 +45,11 @@ export class AppService {
     const tags = await this.createOrFindTags(taskData.tagNames);
 
     const dueDate = new Date();
-    dueDate.setDate(dueDate.getDate() + 7); 
+    dueDate.setDate(dueDate.getDate() + 7);
 
     const newTask = this.taskRepository.create({
       ...taskData,
-      dueDate: dueDate, 
+      dueDate: dueDate,
       tags: tags,
       user: user,
     });
@@ -65,8 +65,17 @@ export class AppService {
     }
   }
 
-  async getTasks() {
-    return await this.taskRepository.find({ relations: ['tags'] });
+  async getTasks(userEmail: string) {
+    const user = await this.userRepository.findOne({
+      where: { email: userEmail },
+    });
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
+    }
+    return await this.taskRepository.find({
+      where: { user: user },
+      relations: ['tags'],
+    });
   }
 
   async toggleTaskCompletion(id: number): Promise<Task> {
