@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import {useEffect, useState } from "react";
 import {
   Box,
   Flex,
@@ -17,20 +17,14 @@ import { Task } from "../types/Task";
 import { Legend } from "./Legend";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
-import { UserContext } from "../contexts/UserContext";
 import { useUser } from "../contexts/UserContext";
-
-interface HomeProps {
-  tasks: Task[];
-  onTasksUpdated: () => void;
-}
 
 const Home: React.FC = () => {
   const { tasks, onTasksUpdated } = useOutletContext<{
     tasks: Task[];
     onTasksUpdated: () => void;
   }>();
-  const userContext = useUser(); // Using the custom hook for context
+  const userContext = useUser(); 
   useAuth();
   console.log("Logged-in user email:", userContext?.userEmail);
   const navigate = useNavigate();

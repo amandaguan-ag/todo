@@ -20,10 +20,6 @@ interface OutletContext {
   onLoginSuccess: (email: string) => void;
 }
 
-interface LoginProps {
-  onLoginSuccess: (email: string) => void;
-}
-
 const isInvalidEmail = (email: string) => {
   const emailFormat = /\S+@\S+\.\S+/;
   if (email.match(emailFormat) && email.length > 0) {
@@ -89,14 +85,6 @@ const Login = () => {
           setPassword("");
           setSubmitClickEmail(false);
           setSubmitClickPassword(false);
-          // toast({
-          //   title: "Error.",
-          //   description:
-          //     "There was an error logging you into your account. Please try again.",
-          //   status: "error",
-          //   duration: 3000,
-          //   isClosable: true,
-          // });
         });
     }
   };

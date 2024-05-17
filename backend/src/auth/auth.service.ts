@@ -48,16 +48,13 @@ export class AuthService {
   }
 
   async logIn(logInDto: LogInDto) {
-    // check user exist
     const user = await this.usersService.findUserByEmail(logInDto.email);
     console.log('USER ', !user);
 
-    //if not exist, throw unatuthozed erroe
     if (!user) {
       throw new UnauthorizedException('username does not exist');
     }
 
-    // verify that password match
     const passwordMatch = await this.verifyPassword(
       logInDto.password,
       user.password,
