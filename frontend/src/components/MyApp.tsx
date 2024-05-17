@@ -4,6 +4,7 @@ import { Task } from "../types/Task";
 import { fetchTasks } from "../api/tasksApi";
 import { sortTasks } from "../utils/taskUtils";
 import { useUser } from "../contexts/UserContext";
+import Header from "./Header";
 
 const MyApp: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -32,12 +33,15 @@ const MyApp: React.FC = () => {
   }, [userEmail]);
 
   return (
-    <Outlet
-      context={{
-        tasks,
-        onTasksUpdated,
-      }}
-    />
+    <>
+      <Header />
+      <Outlet
+        context={{
+          tasks,
+          onTasksUpdated,
+        }}
+      />
+    </>
   );
 };
 
