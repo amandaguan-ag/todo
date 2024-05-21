@@ -5,6 +5,7 @@ import { fetchTasks } from "../api/tasksApi";
 import { sortTasks } from "../utils/taskUtils";
 import { useUser } from "../contexts/UserContext";
 import Header from "./Header";
+import "@fontsource/pacifico";
 
 const MyApp: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);

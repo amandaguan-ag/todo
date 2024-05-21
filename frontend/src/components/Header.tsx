@@ -18,7 +18,9 @@ const Header = () => {
           alt="swiftbird logo"
           boxShadow="lg"
         />
-        <Heading fontSize={24}>Todo List</Heading>
+        <Heading fontSize={24} fontFamily="'Pacifico', cursive">
+          Todo List
+        </Heading>
       </Box>
       <Box display="flex" justifyContent="space-around" w="70%">
         {pages.map((page) => {
