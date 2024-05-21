@@ -9,13 +9,14 @@ const pages = [
 
 const Header = () => {
   return (
-    <Box p={4} display="flex" alignItems="center">
+    <Box py={4} px={8} display="flex" alignItems="center">
       <Box display="flex" gap={4} alignItems="center" flex={1}>
         <Image
-          boxSize="70px"
+          boxSize="80px"
           borderRadius="50%"
           src="SwiftShopBird.png"
           alt="swiftbird logo"
+          boxShadow="lg"
         />
         <Heading fontSize={24}>Todo List</Heading>
       </Box>
