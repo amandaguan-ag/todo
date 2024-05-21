@@ -73,7 +73,6 @@ const Home: React.FC = () => {
         textAlign="center"
         my={6}
         layerStyle="heading"
-        fontFamily="'Pacifico', cursive"
       >
         Task Manager
       </Heading>

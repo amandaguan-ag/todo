@@ -4,6 +4,13 @@ export const theme = extendTheme({
   fonts: {
     heading: "Pacifico, cursive",
   },
+  components: {
+    Heading: {
+      baseStyle: {
+        fontFamily: "Pacifico, cursive",
+      },
+    },
+  },
   layerStyles: {
     heading: { color: "#79A9cd" },
   },

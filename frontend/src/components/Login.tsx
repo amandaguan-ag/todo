@@ -97,7 +97,6 @@ const Login = () => {
         mb={4}
         fontSize={20}
         layerStyle="heading"
-        fontFamily="'Pacifico', cursive"
       >
         Log into your account
       </Heading>

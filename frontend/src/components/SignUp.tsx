@@ -5,12 +5,13 @@ import {
   FormErrorMessage,
   FormLabel,
   Input,
-  Text,
+  Heading,
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Header from "./Header";
 
 const isInvalidEmail = (email: string) => {
   const emailFormat = /\S+@\S+\.\S+/;
@@ -117,15 +118,9 @@ const SignUp = () => {
 
   return (
     <Box>
-      <Text
-        textAlign="center"
-        mb={4}
-        fontSize={20}
-        layerStyle="heading"
-        fontFamily="'Pacifico', cursive"
-      >
+      <Heading textAlign="center" mb={4} fontSize={20} layerStyle="heading">
         Create an account
-      </Text>
+      </Heading>
       <Box
         maxW="75%"
         display="flex"

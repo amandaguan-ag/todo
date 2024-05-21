@@ -18,7 +18,7 @@ const Header = () => {
           alt="swiftbird logo"
           boxShadow="lg"
         />
-        <Heading fontFamily="'Pacifico', cursive" layerStyle="heading">
+        <Heading layerStyle="heading">
           Todo List
         </Heading>
       </Box>
