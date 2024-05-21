@@ -67,7 +67,14 @@ const Home: React.FC = () => {
 
   return (
     <VStack spacing={8} align="stretch">
-      <Heading as="h1" size="xl" textAlign="center" my={6}>
+      <Heading
+        as="h1"
+        size="xl"
+        textAlign="center"
+        my={6}
+        layerStyle="heading"
+        fontFamily="'Pacifico', cursive"
+      >
         Task Manager
       </Heading>
       <Button onClick={handleLogout}>Logout</Button>
