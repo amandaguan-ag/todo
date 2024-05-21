@@ -4,6 +4,7 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
+  Heading,
   Input,
   Text,
   useToast,
@@ -91,9 +92,15 @@ const Login = () => {
 
   return (
     <Box>
-      <Text textAlign="center" mb={4} fontSize={20}>
+      <Heading
+        textAlign="center"
+        mb={4}
+        fontSize={20}
+        layerStyle="heading"
+        fontFamily="'Pacifico', cursive"
+      >
         Log into your account
-      </Text>
+      </Heading>
       <Box
         maxW="75%"
         display="flex"
