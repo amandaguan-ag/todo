@@ -117,7 +117,13 @@ const SignUp = () => {
 
   return (
     <Box>
-      <Text textAlign="center" mb={4} fontSize={20}>
+      <Text
+        textAlign="center"
+        mb={4}
+        fontSize={20}
+        layerStyle="heading"
+        fontFamily="'Pacifico', cursive"
+      >
         Create an account
       </Text>
       <Box
