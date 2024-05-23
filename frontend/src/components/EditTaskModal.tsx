@@ -89,20 +89,21 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Edit Task</ModalHeader>
+        <ModalHeader layerStyle="heading">Edit Task</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <FormControl id="task-description" isRequired>
-            <FormLabel>Description</FormLabel>
+            <FormLabel layerStyle="text">Description</FormLabel>
             <Input
               value={state.description}
+              layerStyle="text"
               onChange={(e) =>
                 dispatch({ type: "setDescription", payload: e.target.value })
               }
             />
           </FormControl>
           <FormControl id="task-priority" mt={4} isRequired>
-            <FormLabel>Priority</FormLabel>
+            <FormLabel layerStyle="text">Priority</FormLabel>
             <Select
               value={state.priority}
               onChange={(e) =>
@@ -118,8 +119,9 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
             </Select>
           </FormControl>
           <FormControl id="task-tags" mt={4}>
-            <FormLabel>Tags</FormLabel>
+            <FormLabel layerStyle="text">Tags</FormLabel>
             <Select
+              layerStyle="text"
               multiple
               value={state.tags.map((tag) => tag.id.toString())}
               onChange={(e: ChangeEvent<HTMLSelectElement>) => {

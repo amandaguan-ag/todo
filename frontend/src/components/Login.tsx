@@ -92,12 +92,7 @@ const Login = () => {
 
   return (
     <Box>
-      <Heading
-        textAlign="center"
-        mb={4}
-        fontSize={20}
-        layerStyle="heading"
-      >
+      <Heading textAlign="center" mb={4} fontSize={20} layerStyle="heading">
         Log into your account
       </Heading>
       <Box
@@ -109,22 +104,24 @@ const Login = () => {
         gap={4}
       >
         <FormControl isInvalid={isErrorEmail} isRequired>
-          <FormLabel>Email</FormLabel>
+          <FormLabel layerStyle="text">Email</FormLabel>
           <Input
             type="email"
             value={email ? email : ""}
             onChange={onChangeEmail}
+            layerStyle="text"
           />
           {!isErrorEmail ? null : (
             <FormErrorMessage>Email is required.</FormErrorMessage>
           )}
         </FormControl>
         <FormControl isInvalid={isErrorPassword} isRequired>
-          <FormLabel>Password</FormLabel>
+          <FormLabel layerStyle="text">Password</FormLabel>
           <Input
             type="password"
             value={password ? password : ""}
             onChange={onChangePassword}
+            layerStyle="text"
           />
           {!isErrorPassword ? null : (
             <FormErrorMessage>Password is required.</FormErrorMessage>

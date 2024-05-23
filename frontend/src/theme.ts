@@ -1,8 +1,10 @@
 import { extendTheme } from "@chakra-ui/react";
+import { text } from "stream/consumers";
 
 export const theme = extendTheme({
   fonts: {
     heading: "Pacifico, cursive",
+    body: `"Sometype Mono", monospace`,
   },
   components: {
     Heading: {
@@ -13,6 +15,7 @@ export const theme = extendTheme({
   },
   layerStyles: {
     heading: { color: "#79A9cd" },
+    text: { color: "#45446A" },
   },
   styles: {
     global: {

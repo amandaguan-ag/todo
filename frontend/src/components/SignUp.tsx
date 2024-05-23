@@ -130,33 +130,36 @@ const SignUp = () => {
         gap={4}
       >
         <FormControl isInvalid={isErrorEmail} isRequired>
-          <FormLabel>Email</FormLabel>
+          <FormLabel layerStyle="text">Email</FormLabel>
           <Input
             type="email"
             value={email ? email : ""}
             onChange={onChangeEmail}
+            layerStyle="text"
           />
           {!isErrorEmail ? null : (
             <FormErrorMessage>Email is required.</FormErrorMessage>
           )}
         </FormControl>
         <FormControl isInvalid={isErrorPassword} isRequired>
-          <FormLabel>Password</FormLabel>
+          <FormLabel layerStyle="text">Password</FormLabel>
           <Input
             type="password"
             value={password ? password : ""}
             onChange={onChangePassword}
+            layerStyle="text"
           />
           {!isErrorPassword ? null : (
             <FormErrorMessage>Password is required.</FormErrorMessage>
           )}
         </FormControl>
         <FormControl isInvalid={isErrorSecondPassword} isRequired>
-          <FormLabel>Enter Password Again</FormLabel>
+          <FormLabel layerStyle="text">Enter Password Again</FormLabel>
           <Input
             type="password"
             value={secondPassword}
             onChange={onChangeSecondPassword}
+            layerStyle="text"
           />
           {!isErrorSecondPassword ? null : (
             <FormErrorMessage>Password must match.</FormErrorMessage>
