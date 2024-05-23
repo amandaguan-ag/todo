@@ -26,7 +26,6 @@ const Home: React.FC = () => {
   }>();
   const userContext = useUser();
   useAuth();
-  console.log("Logged-in user email:", userContext?.userEmail);
   const navigate = useNavigate();
 
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
