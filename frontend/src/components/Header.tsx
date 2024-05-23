@@ -1,4 +1,4 @@
-import { Box, Image, Heading } from "@chakra-ui/react";
+import { Box, Image, Heading, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
 const pages = [
@@ -9,7 +9,15 @@ const pages = [
 
 const Header = () => {
   return (
-    <Box py={4} px={8} display="flex" alignItems="center">
+    <Box
+      as="header"
+      py={4}
+      px={8}
+      display="flex"
+      alignItems="center"
+      bg="blue.700"
+      color="white"
+    >
       <Box display="flex" gap={4} alignItems="center" flex={1}>
         <Image
           boxSize="80px"
@@ -18,18 +26,22 @@ const Header = () => {
           alt="swiftbird logo"
           boxShadow="lg"
         />
-        <Heading layerStyle="heading">
-          Todo List
-        </Heading>
+        <Heading size="lg">Todo List</Heading>
       </Box>
       <Box display="flex" justifyContent="space-around" w="70%">
-        {pages.map((page) => {
-          return (
-            <Link to={page.path}>
-              <Box>{page.name}</Box>
-            </Link>
-          );
-        })}
+        {pages.map((page, index) => (
+          <Link to={page.path} key={index}>
+            <Text
+              px={3}
+              py={2}
+              borderRadius="md"
+              _hover={{ bg: "blue.800" }}
+              color="#ffffff"
+            >
+              {page.name}
+            </Text>
+          </Link>
+        ))}
       </Box>
     </Box>
   );
