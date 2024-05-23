@@ -27,7 +27,7 @@ const Header = () => {
         <Image
           boxSize="80px"
           borderRadius="50%"
-          src="SwiftShopBird.png"
+          src="todo.png"
           alt="swiftbird logo"
           boxShadow="lg"
         />
