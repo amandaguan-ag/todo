@@ -118,11 +118,11 @@ const SignUp = () => {
 
   return (
     <Box>
-      <Heading textAlign="center" mb={4} fontSize={20} layerStyle="heading">
+      <Heading textAlign="center" mb={4} layerStyle="heading">
         Create an account
       </Heading>
       <Box
-        maxW="75%"
+        maxW="sm" 
         display="flex"
         flexDirection="column"
         alignItems="center"
@@ -165,7 +165,7 @@ const SignUp = () => {
             <FormErrorMessage>Password must match.</FormErrorMessage>
           )}
         </FormControl>
-        <Button w="100%" onClick={onSubmit}>
+        <Button w="100%" layerStyle="button" onClick={onSubmit} color="#11151D">
           Submit
         </Button>
       </Box>

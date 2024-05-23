@@ -14,15 +14,34 @@ export const theme = extendTheme({
     },
   },
   layerStyles: {
-    heading: { color: "#79A9cd" },
-    text: { color: "#45446A" },
-  },
-  styles: {
-    global: {
-      heading: { color: "#79A9cds" },
-      body: {
-        bg: "gray.#E1E7CD",
+    heading: {
+      fontSize: "24px",
+      color: "blue.600",
+      fontWeight: "bold",
+    },
+    text: {
+      color: "gray.600",
+    },
+    input: {
+      borderColor: "gray.300",
+      _hover: {
+        borderColor: "gray.400",
       },
+      _focus: {
+        borderColor: "blue.500",
+        boxShadow: "0 0 0 1px var(--chakra-colors-blue-500)",
+      },
+    },
+    button: {
+      backgroundColor: "blue.500",
+      color: "white",
+      _hover: {
+        backgroundColor: "blue.600",
+      },
+    },
+    errorText: {
+      fontSize: "sm",
+      color: "red.500",
     },
   },
 });

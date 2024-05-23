@@ -92,11 +92,11 @@ const Login = () => {
 
   return (
     <Box>
-      <Heading textAlign="center" mb={4} fontSize={20} layerStyle="heading">
+      <Heading textAlign="center" mb={4} layerStyle="heading">
         Log into your account
       </Heading>
       <Box
-        maxW="75%"
+        maxW="sm" 
         display="flex"
         flexDirection="column"
         alignItems="center"
@@ -127,13 +127,14 @@ const Login = () => {
             <FormErrorMessage>Password is required.</FormErrorMessage>
           )}
         </FormControl>
-        <Button w="100%" onClick={onSubmit}>
+        <Button w="100%" layerStyle="button" onClick={onSubmit} color="#06070A">
           Log In
         </Button>
         <Button
           w="100%"
           mt={4}
           colorScheme="blue"
+          variant="outline" 
           onClick={() => navigate("/sign-up")}
         >
           Sign Up
