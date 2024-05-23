@@ -59,17 +59,11 @@ const Home: React.FC = () => {
     );
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/log-in");
-  };
-
   return (
     <VStack spacing={8} align="stretch">
       <Heading as="h1" size="xl" textAlign="center" my={6} layerStyle="heading">
         Task Manager
       </Heading>
-      <Button onClick={handleLogout}>Logout</Button>
       <AddTask
         onTasksUpdated={onTasksUpdated}
         userEmail={userContext?.userEmail ?? ""}
