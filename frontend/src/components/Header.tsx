@@ -19,7 +19,7 @@ const Header = () => {
       px={8}
       display="flex"
       alignItems="center"
-      justifyContent="space-between" 
+      justifyContent="space-between"
       bg="blue.700"
       color="white"
     >
@@ -35,7 +35,12 @@ const Header = () => {
       </Box>
       <Box display="flex" alignItems="center">
         {userEmail ? (
-          <Button onClick={handleLogout} colorScheme="blue">
+          <Button
+            onClick={handleLogout}
+            colorScheme="blue"
+            bg="blue.800"
+            _hover={{ bg: "blue.900" }}
+          >
             Log Out
           </Button>
         ) : (
