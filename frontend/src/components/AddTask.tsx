@@ -112,7 +112,9 @@ const AddTask: React.FC<{ onTasksUpdated: () => void; userEmail: string }> = ({
             isInvalid={formState.submitted && !formState.description.trim()}
             flex={2}
           >
-            <FormLabel htmlFor="description">Task Description*</FormLabel>
+            <FormLabel htmlFor="description" layerStyle="text">
+              Task Description*
+            </FormLabel>
             <Input
               id="description"
               name="description"
@@ -120,6 +122,7 @@ const AddTask: React.FC<{ onTasksUpdated: () => void; userEmail: string }> = ({
               onChange={handleInputChange}
               placeholder="Enter a new task..."
               size="md"
+              layerStyle="text"
             />
             {formState.submitted && !formState.description.trim() && (
               <FormErrorMessage>Task description is required.</FormErrorMessage>
@@ -130,13 +133,16 @@ const AddTask: React.FC<{ onTasksUpdated: () => void; userEmail: string }> = ({
             isInvalid={formState.submitted && !formState.priority}
             flex={1}
           >
-            <FormLabel htmlFor="priority">Priority*</FormLabel>
+            <FormLabel htmlFor="priority" layerStyle="text">
+              Priority*
+            </FormLabel>
             <Select
               id="priority"
               name="priority"
               value={formState.priority}
               onChange={handleInputChange}
               placeholder="Select priority"
+              layerStyle="text"
             >
               <option value="High">High</option>
               <option value="Medium">Medium</option>
@@ -150,13 +156,16 @@ const AddTask: React.FC<{ onTasksUpdated: () => void; userEmail: string }> = ({
           </FormControl>
 
           <FormControl flex={1}>
-            <FormLabel htmlFor="tag">Tag</FormLabel>
+            <FormLabel htmlFor="tag" layerStyle="text">
+              Tag
+            </FormLabel>
             <Select
               id="tag"
               name="tag"
               value={formState.tagNames[0] || ""}
               onChange={handleInputChange}
               placeholder="Select tag"
+              layerStyle="text"
             >
               <option value="Work">Work</option>
               <option value="Study">Study</option>

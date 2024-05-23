@@ -5,12 +5,13 @@ import {
   FormErrorMessage,
   FormLabel,
   Input,
-  Text,
+  Heading,
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Header from "./Header";
 
 const isInvalidEmail = (email: string) => {
   const emailFormat = /\S+@\S+\.\S+/;
@@ -117,11 +118,11 @@ const SignUp = () => {
 
   return (
     <Box>
-      <Text textAlign="center" mb={4} fontSize={20}>
+      <Heading textAlign="center" mb={4} layerStyle="heading">
         Create an account
-      </Text>
+      </Heading>
       <Box
-        maxW="75%"
+        maxW="sm" 
         display="flex"
         flexDirection="column"
         alignItems="center"
@@ -129,39 +130,42 @@ const SignUp = () => {
         gap={4}
       >
         <FormControl isInvalid={isErrorEmail} isRequired>
-          <FormLabel>Email</FormLabel>
+          <FormLabel layerStyle="text">Email</FormLabel>
           <Input
             type="email"
             value={email ? email : ""}
             onChange={onChangeEmail}
+            layerStyle="text"
           />
           {!isErrorEmail ? null : (
             <FormErrorMessage>Email is required.</FormErrorMessage>
           )}
         </FormControl>
         <FormControl isInvalid={isErrorPassword} isRequired>
-          <FormLabel>Password</FormLabel>
+          <FormLabel layerStyle="text">Password</FormLabel>
           <Input
             type="password"
             value={password ? password : ""}
             onChange={onChangePassword}
+            layerStyle="text"
           />
           {!isErrorPassword ? null : (
             <FormErrorMessage>Password is required.</FormErrorMessage>
           )}
         </FormControl>
         <FormControl isInvalid={isErrorSecondPassword} isRequired>
-          <FormLabel>Enter Password Again</FormLabel>
+          <FormLabel layerStyle="text">Enter Password Again</FormLabel>
           <Input
             type="password"
             value={secondPassword}
             onChange={onChangeSecondPassword}
+            layerStyle="text"
           />
           {!isErrorSecondPassword ? null : (
             <FormErrorMessage>Password must match.</FormErrorMessage>
           )}
         </FormControl>
-        <Button w="100%" onClick={onSubmit}>
+        <Button w="100%" layerStyle="button" onClick={onSubmit} color="#11151D">
           Submit
         </Button>
       </Box>

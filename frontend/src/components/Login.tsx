@@ -4,6 +4,7 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
+  Heading,
   Input,
   Text,
   useToast,
@@ -91,11 +92,11 @@ const Login = () => {
 
   return (
     <Box>
-      <Text textAlign="center" mb={4} fontSize={20}>
+      <Heading textAlign="center" mb={4} layerStyle="heading">
         Log into your account
-      </Text>
+      </Heading>
       <Box
-        maxW="75%"
+        maxW="sm" 
         display="flex"
         flexDirection="column"
         alignItems="center"
@@ -103,34 +104,37 @@ const Login = () => {
         gap={4}
       >
         <FormControl isInvalid={isErrorEmail} isRequired>
-          <FormLabel>Email</FormLabel>
+          <FormLabel layerStyle="text">Email</FormLabel>
           <Input
             type="email"
             value={email ? email : ""}
             onChange={onChangeEmail}
+            layerStyle="text"
           />
           {!isErrorEmail ? null : (
             <FormErrorMessage>Email is required.</FormErrorMessage>
           )}
         </FormControl>
         <FormControl isInvalid={isErrorPassword} isRequired>
-          <FormLabel>Password</FormLabel>
+          <FormLabel layerStyle="text">Password</FormLabel>
           <Input
             type="password"
             value={password ? password : ""}
             onChange={onChangePassword}
+            layerStyle="text"
           />
           {!isErrorPassword ? null : (
             <FormErrorMessage>Password is required.</FormErrorMessage>
           )}
         </FormControl>
-        <Button w="100%" onClick={onSubmit}>
+        <Button w="100%" layerStyle="button" onClick={onSubmit} color="#06070A">
           Log In
         </Button>
         <Button
           w="100%"
           mt={4}
           colorScheme="blue"
+          variant="outline" 
           onClick={() => navigate("/sign-up")}
         >
           Sign Up

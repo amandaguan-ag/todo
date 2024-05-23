@@ -86,23 +86,35 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} isCentered size="lg">
       <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Edit Task</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
+      <ModalContent borderRadius="xl" boxShadow="dark-lg">
+        <ModalHeader
+          layerStyle="heading"
+          bg="blue.500"
+          color="white"
+          borderTopRadius="xl"
+        >
+          Edit Task
+        </ModalHeader>
+        <ModalCloseButton color="white" />
+        <ModalBody p={6}>
           <FormControl id="task-description" isRequired>
-            <FormLabel>Description</FormLabel>
+            <FormLabel fontWeight="semibold" mb={1}>
+              Description
+            </FormLabel>
             <Input
               value={state.description}
               onChange={(e) =>
                 dispatch({ type: "setDescription", payload: e.target.value })
               }
+              focusBorderColor="blue.500"
             />
           </FormControl>
           <FormControl id="task-priority" mt={4} isRequired>
-            <FormLabel>Priority</FormLabel>
+            <FormLabel fontWeight="semibold" mb={1}>
+              Priority
+            </FormLabel>
             <Select
               value={state.priority}
               onChange={(e) =>
@@ -111,6 +123,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
                   payload: e.target.value as Task["priority"],
                 })
               }
+              focusBorderColor="blue.500"
             >
               <option value="High">High</option>
               <option value="Medium">Medium</option>
@@ -118,7 +131,9 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
             </Select>
           </FormControl>
           <FormControl id="task-tags" mt={4}>
-            <FormLabel>Tags</FormLabel>
+            <FormLabel fontWeight="semibold" mb={1}>
+              Tags
+            </FormLabel>
             <Select
               multiple
               value={state.tags.map((tag) => tag.id.toString())}
@@ -129,6 +144,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
                 );
                 dispatch({ type: "setTagIds", payload: selectedOptions });
               }}
+              focusBorderColor="blue.500"
             >
               {allTags.map((tag) => (
                 <option key={tag.id} value={tag.id.toString()}>
@@ -139,7 +155,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
           </FormControl>
         </ModalBody>
 
-        <ModalFooter>
+        <ModalFooter bg="gray.100" borderBottomRadius="xl">
           <Button colorScheme="blue" mr={3} onClick={handleSave}>
             Save
           </Button>

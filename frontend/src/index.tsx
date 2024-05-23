@@ -10,14 +10,17 @@ import Home from "./components/Home";
 import reportWebVitals from "./reportWebVitals";
 import reportAccessibility from "./utils/reportAccessibility";
 import { UserProvider } from "./contexts/UserContext";
+import { createStandaloneToast } from "@chakra-ui/react";
+import { theme } from "./theme";
 
+const { ToastContainer, toast } = createStandaloneToast();
 const rootElement = document.getElementById("root");
 if (rootElement) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
     <React.StrictMode>
       <BrowserRouter>
-        <ChakraProvider>
+        <ChakraProvider theme={theme}>
           <UserProvider>
             <Routes>
               <Route path="/" element={<App />}>
@@ -27,6 +30,7 @@ if (rootElement) {
                 <Route path="home" element={<Home />} />
               </Route>
             </Routes>
+            <ToastContainer />
           </UserProvider>
         </ChakraProvider>
       </BrowserRouter>
