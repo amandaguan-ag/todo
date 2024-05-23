@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const pages = [
   { name: "Log In", path: "/log-in" },
   { name: "Sign Up", path: "/sign-up" },
-  { name: "Todo", path: "/home" },
+  { name: "Task Manager", path: "/home" },
 ];
 
 const Header = () => {
