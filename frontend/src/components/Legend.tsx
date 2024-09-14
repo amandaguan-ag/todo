@@ -7,7 +7,7 @@ export const Legend = () => {
       {Object.entries(tagColors).map(([tagName, color]) => (
         <Flex key={tagName} alignItems="center" mx={2}>
           <Box w="15px" h="15px" bg={color} mr={1} />
-          <Text>{tagName}</Text>
+          <Text layerStyle="text">{tagName}</Text>
         </Flex>
       ))}
     </Flex>

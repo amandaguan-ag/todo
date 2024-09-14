@@ -81,7 +81,7 @@ const TaskItem: React.FC<TaskProps> = ({ task, onToggle, isHighlighted }) => {
           h="10px"
           bg={
             task.tags?.length ? getTagColor(task.tags[0].name) : "transparent"
-          }
+          }layerStyle="text"
         />
         <Grid
           templateColumns={baseLayout ? "1fr" : "repeat(3, 1fr) auto auto"}
@@ -105,15 +105,16 @@ const TaskItem: React.FC<TaskProps> = ({ task, onToggle, isHighlighted }) => {
             isChecked={task.completed}
             onChange={toggleCompletion}
             gridArea="checkbox"
+            layerStyle="text"
           >
-            <Text fontWeight="bold" gridArea="description">
+            <Text fontWeight="bold" gridArea="description" layerStyle="text">
               {task.description}
             </Text>
           </Checkbox>
-          <Text fontWeight="bold" gridArea="priority">
+          <Text fontWeight="bold" gridArea="priority" layerStyle="text">
             {task.priority} Priority
           </Text>
-          <Text color="#6B6666" gridArea="date">
+          <Text color="#6B6666" gridArea="date" layerStyle="text">
             {formatDate(task.createdAt)}
           </Text>
           <Box
